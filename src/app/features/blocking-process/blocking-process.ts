@@ -2,6 +2,10 @@ import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 
+// 1. IMPORTAMOS EL SERVICIO Y LOS CONTRATOS
+import { ApiService } from '../../core/services/api.service';
+import { SolicitudBloqueoPayload, TicketRespuesta } from '../../core/models/bloqueo.models';
+
 @Component({
   selector: 'app-blocking-process',
   standalone: true,
@@ -12,6 +16,7 @@ import { Router } from '@angular/router';
 export class BlockingProcessComponent implements OnInit {
   estadoActual: 'procesando' | 'completado' = 'procesando';
   progreso: number = 0;
+  
   estadoBloqueo: 'pendiente' | 'procesando' | 'completado' = 'procesando';
   estadoReporte: 'pendiente' | 'procesando' | 'completado' = 'pendiente';
 
@@ -19,26 +24,41 @@ export class BlockingProcessComponent implements OnInit {
   hizoBloqueo: boolean = true;
   hizoReporte: boolean = true;
   
+  // Estas variables se llenarán con lo que responda el Backend
   codigoSolicitud: string = '';
   fechaSolicitud: string = '';
+  
+  // Aquí guardamos el Payload que nos envía la pantalla anterior
+  payloadRecibido!: SolicitudBloqueoPayload;
 
-  constructor(private router: Router, private cdr: ChangeDetectorRef) {
+  constructor(
+    private router: Router, 
+    private cdr: ChangeDetectorRef,
+    private apiService: ApiService // 2. INYECTAMOS EL SERVICIO
+  ) {
     const navigation = this.router.getCurrentNavigation();
-    if (navigation?.extras.state) {
-      this.hizoBloqueo = navigation.extras.state['bloqueo'];
-      this.hizoReporte = navigation.extras.state['reporte'];
+    if (navigation?.extras.state && navigation.extras.state['payload']) {
+      // Atrapamos el Payload
+      this.payloadRecibido = navigation.extras.state['payload'];
       this.cantidadAcciones = navigation.extras.state['cantidad'] || 2;
+      
+      // Ajustamos los checks según lo que haya marcado el usuario
+      this.hizoBloqueo = this.payloadRecibido.acciones.bloqueoLinea;
+      this.hizoReporte = this.payloadRecibido.acciones.reportePolicia;
+    } else {
+      this.router.navigate(['/dashboard']);
     }
   }
 
   ngOnInit() {
-    this.iniciarProceso();
-    this.generarDatosTicket();
+    this.iniciarAnimacionVisual();
+    this.procesarEnBackend();
   }
 
-  iniciarProceso() {
+  iniciarAnimacionVisual() {
     const intervalo = setInterval(() => {
       this.progreso += 2; 
+      
       if (this.progreso === 50) {
         this.estadoBloqueo = 'completado';
         this.estadoReporte = 'procesando';
@@ -59,30 +79,39 @@ export class BlockingProcessComponent implements OnInit {
     }, 60); 
   }
 
-  // --- LÓGICA ACTUALIZADA PARA LA FECHA ACTUAL ---
-  generarDatosTicket() {
-    // 1. Generamos el código de ticket
-    const randomNum = Math.floor(1000 + Math.random() * 9000);
-    this.codigoSolicitud = `SIBP-2026-${randomNum}`;
+  // 3. LA LLAMADA OFICIAL AL BACKEND
+  procesarEnBackend() {
+    if (this.payloadRecibido) {
+      this.apiService.procesarSolicitudBloqueo(this.payloadRecibido).subscribe({
+        next: (respuesta: TicketRespuesta) => {
+          // Cuando el servidor responde con éxito, sacamos SU código y SU fecha
+          this.codigoSolicitud = respuesta.codigoSolicitud;
+          this.formatearFechaBackend(respuesta.fechaProcesamiento);
+        },
+        error: (err) => {
+          console.error('Error al procesar el bloqueo:', err);
+        }
+      });
+    }
+  }
 
-    // 2. Obtenemos la fecha y hora EXACTA de este momento
-    const ahora = new Date();
+  formatearFechaBackend(fechaISO: string) {
+    // Transformamos la fecha que manda el servidor al formato que te gustó:
+    // "06 de mayo del 2026 - 05:46 p. m."
+    const fecha = new Date(fechaISO);
     
-    // Formateo de fecha: "06 de mayo del 2026"
-    const dia = ahora.getDate().toString().padStart(2, '0');
+    const dia = fecha.getDate().toString().padStart(2, '0');
     const meses = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
-    const mes = meses[ahora.getMonth()];
-    const anio = ahora.getFullYear();
+    const mes = meses[fecha.getMonth()];
+    const anio = fecha.getFullYear();
 
-    // Formateo de hora: "12:24 p. m."
-    let horas = ahora.getHours();
-    const minutos = ahora.getMinutes().toString().padStart(2, '0');
+    let horas = fecha.getHours();
+    const minutos = fecha.getMinutes().toString().padStart(2, '0');
     const ampm = horas >= 12 ? 'p. m.' : 'a. m.';
     horas = horas % 12;
-    horas = horas ? horas : 12; // el '0' lo pasamos a '12'
+    horas = horas ? horas : 12; 
     const horasStr = horas.toString().padStart(2, '0');
 
-    // 3. Unimos todo con el GUION solicitado
     this.fechaSolicitud = `${dia} de ${mes} del ${anio} - ${horasStr}:${minutos} ${ampm}`;
   }
 

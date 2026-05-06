@@ -2,6 +2,7 @@ import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { SolicitudBloqueoPayload } from '../../core/models/bloqueo.models';
 
 @Component({
   selector: 'app-security-measures',
@@ -128,12 +129,36 @@ export class SecurityMeasuresComponent implements OnInit {
 
   ejecutarAcciones() {
     if (this.esFormularioValido) {
+      
+      // 1. ARMAMOS EL PAQUETE (PAYLOAD) EXACTAMENTE COMO LO PIDE EL BACKEND
+      const payloadAlBackend: SolicitudBloqueoPayload = {
+        usuarioDni: '74125896', // DNI simulado del usuario logueado
+        lineasIds: this.lineasSeleccionadas.map(linea => linea.id), // Extraemos solo los IDs [1, 2, 3...]
+        
+        acciones: {
+          bloqueoLinea: this.bloqueoLinea,
+          reportePolicia: this.reportePolicia
+        },
+        
+        // 2. Si hay reporte policial, mapeamos los datos. Si no, enviamos 'null'
+        datosIncidente: this.reportePolicia ? {
+          modalidad: this.incidente.modalidad,
+          departamento: this.incidente.departamento,
+          provincia: this.incidente.provincia,
+          distrito: this.incidente.distrito,
+          calle: this.incidente.calle,
+          referencia: this.incidente.referencia,
+          fecha: this.incidente.fecha,
+          hora: this.incidente.hora,
+          correoNotificacion: this.incidente.correo
+        } : null
+      };
+
+      // 3. ENVIAMOS EL PAYLOAD A LA PANTALLA DE CARGA
       this.router.navigate(['/blocking-process'], {
         state: { 
-          bloqueo: this.bloqueoLinea, 
-          reporte: this.reportePolicia,
-          cantidad: this.cantidadAcciones,
-          incidente: this.reportePolicia ? this.incidente : null 
+          payload: payloadAlBackend,
+          cantidad: this.cantidadAcciones
         }
       });
     }

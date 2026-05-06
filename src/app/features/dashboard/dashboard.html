@@ -34,7 +34,10 @@
   </section>
   
   <!-- CONTENEDOR DE TARJETAS -->
-  <section class="cards-container">
+   <div *ngIf="cargandoLineas" style="text-align: center; padding: 40px; color: #64748B;">
+    Buscando tus líneas registradas...
+  </div>
+  <section class="cards-container" *ngIf="!cargandoLineas">
     
     <div class="line-card" 
          *ngFor="let linea of lineas" 
