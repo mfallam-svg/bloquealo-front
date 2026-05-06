@@ -1,1 +1,70 @@
-/* You can add global styles to this file, and also import other style files */
+/* ==========================================================================
+   ESTILOS GLOBALES - IDENTIDAD GOB.PE (Basado en Figma Final)
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+:root {
+  /* --- COLORES PRINCIPALES GOB.PE --- */
+  --gob-red: #DC362E;           /* Rojo principal oficial */
+  --gob-red-dark: #BF0909;      /* Rojo para hovers y botones presionados */
+  --gob-red-light: #FCEEEE;     /* Fondos rojos muy suaves (10% opacidad) */
+  
+  /* --- TEXTOS Y NEUTRALES --- */
+  --text-dark: #26292E;         /* Textos principales y títulos (Casi negro) */
+  --text-gray: #555869;         /* Textos secundarios y subtítulos */
+  
+  /* --- FONDOS --- */
+  --bg-color: #F6F9FC;          /* Fondo general de la aplicación */
+  --bg-white: #FFFFFF;          /* Fondo de las tarjetas */
+  
+  /* --- ESTADOS Y BORDES --- */
+  --border-color: #E2E8F0;      /* Líneas divisorias y bordes */
+  --success: #2E7D32;           /* Verde de éxito/activo */
+  --warning: #FF9500;           /* Naranja de advertencia */
+
+  /* --- SOMBRAS (Flat Design) --- */
+  /* El theme final exige no usar sombras grandes */
+  --shadow-gob: 0 1px 3px rgba(0,0,0,0.08); 
+}
+
+/* --- RESET Y TIPOGRAFÍA --- */
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  background-color: var(--bg-color);
+  color: var(--text-dark);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--text-dark);
+}
+
+/* --- REGLAS DE CURSORES (Extraídas del Theme) --- */
+button, 
+a, 
+[role="button"], 
+.cursor-pointer {
+  cursor: pointer !important;
+}
+
+button:disabled, 
+button[disabled], 
+.cursor-not-allowed, 
+input:disabled {
+  cursor: not-allowed !important;
+  opacity: 0.6;
+}

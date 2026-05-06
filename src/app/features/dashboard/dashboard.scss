@@ -1,0 +1,174 @@
+/* VARIABLES SCSS */
+$gob-pe-red: #DC362E;
+$text-primary: #26292E;
+$text-secondary: #555869;
+$border-color: #E2E8F0;
+$bg-color: #F8FAFC;
+$white: #FFFFFF;
+$green-active: #1E8E3E;
+$bg-green: #E6F4EA;
+
+body { margin: 0; font-family: 'Inter', sans-serif; background-color: $bg-color; }
+
+/* --- HEADER --- */
+.main-header { height: 61px; background-color: $white; border-bottom: 1px solid $border-color; display: flex; align-items: center; position: relative; z-index: 100; }
+.header-container { max-width: 1400px; width: 100%; margin: 0 auto; padding: 0 40px; display: flex; justify-content: space-between; align-items: center; }
+.logo-area { display: flex; align-items: center; gap: 15px; .gob-pe-logo { height: 30px; } .vertical-separator { width: 1px; height: 24px; background-color: #CBD5E1; } .service-name { font-weight: 500; font-size: 16px; color: $gob-pe-red; } }
+.main-nav { display: flex; align-items: center; gap: 32px; .vertical-separator { width: 1px; height: 20px; background-color: #E2E8F0; } .nav-link { text-decoration: none; color: $text-primary; font-weight: 500; font-size: 15px; transition: color 0.2s; &:hover { color: $gob-pe-red; } } .exit-link { display: flex; align-items: center; gap: 8px; color: $text-secondary; .exit-icon { width: 18px; height: 18px; } } }
+
+/* --- HERO SECTION --- */
+.hero-section {
+  background-color: $gob-pe-red; color: $white; padding: 25px 40px 40px 40px; 
+  border-bottom-left-radius: 24px; border-bottom-right-radius: 24px;
+  
+  .hero-content {
+    max-width: 800px; margin: 0 auto;
+
+    .breadcrumbs {
+      font-size: 11px; font-weight: 600; letter-spacing: 0.5px; opacity: 0.8; margin-bottom: 24px;
+      strong { opacity: 1; }
+    }
+    h1 { font-size: 28px; font-weight: 800; margin: 0 0 8px 0; letter-spacing: -0.5px; color: $white; }
+    .hero-subtitle { font-size: 15px; font-weight: 500; opacity: 0.95; margin: 0; }
+  }
+}
+
+/* --- TARJETAS --- */
+.cards-container {
+  max-width: 800px; margin: 15px auto 100px; /* Margen negativo para subir un poco */
+  padding: 0 20px; display: flex; flex-direction: column; gap: 16px; position: relative; z-index: 10;
+}
+
+.line-card {
+  background-color: $white; border: 1.5px solid $border-color; border-radius: 16px; padding: 24px;
+  display: flex; align-items: center; gap: 24px; cursor: pointer; transition: all 0.2s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.02);
+
+  &:hover { border-color: #CBD5E1; transform: translateY(-2px); box-shadow: 0 8px 15px rgba(0, 0, 0, 0.05); }
+
+  /* Cuadro Gris del Icono (Estado normal) */
+  .icon-box {
+    width: 56px; height: 56px; background-color: #F1F5F9; border-radius: 12px;
+    display: flex; justify-content: center; align-items: center; flex-shrink: 0;
+    color: #64748B; /* Color del trazo del SVG */
+    transition: all 0.2s ease;
+    svg { width: 28px; height: 28px; }
+  }
+
+  /* --- ESTADO SELECCIONADO (Múltiples) --- */
+  &.selected {
+    border-color: $gob-pe-red; 
+    background-color: $white; /* Mantenemos el fondo blanco como en tu imagen */
+    
+    /* El ícono del celular se vuelve rojo con el dibujo blanco */
+    .icon-box {
+      background-color: $gob-pe-red;
+      color: $white;
+    }
+
+    /* El check se activa */
+    .check-circle { 
+      background-color: $gob-pe-red; border-color: $gob-pe-red; 
+      .check-icon { transform: scale(1); opacity: 1; } 
+    }
+  }
+
+  /* Info (Grilla alineada) */
+  .line-info {
+    flex: 1; display: flex; flex-direction: column; gap: 10px;
+
+    .info-row {
+      display: grid; grid-template-columns: 80px 1fr; align-items: center;
+      .label { font-size: 14px; color: $text-secondary; font-weight: 500; }
+      .value { font-size: 15px; color: $text-primary; font-weight: 500; }
+      .number { font-weight: 800; font-size: 16px; letter-spacing: 0.5px; }
+    }
+  }
+
+  /* Etiqueta Activo */
+  .active-badge {
+    display: inline-flex; align-items: center; gap: 6px; background-color: $bg-green;
+    color: $green-active; font-size: 12px; font-weight: 700; padding: 4px 10px; border-radius: 20px; width: max-content;
+    .dot { width: 6px; height: 6px; background-color: $green-active; border-radius: 50%; }
+  }
+
+  /* Checkbox Circular */
+  .check-circle {
+    width: 24px; height: 24px; border: 2px solid #CBD5E1; border-radius: 50%;
+    display: flex; justify-content: center; align-items: center; transition: all 0.2s ease;
+    background-color: transparent;
+    .check-icon { 
+      width: 14px; height: 14px; transform: scale(0); opacity: 0; 
+      transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+    }
+  }
+}
+
+/* --- BARRA INFERIOR --- */
+.bottom-action-bar {
+  background-color: $white; padding: 24px; border-top: 1px solid $border-color;
+  display: flex; justify-content: center;
+  /* La pegamos al fondo de la pantalla visualmente o fluyendo normal */
+  margin-top: 40px;
+}
+
+.continue-btn {
+  width: 100%; max-width: 800px; height: 56px; background-color: #E2E8F0; border: none; border-radius: 12px;
+  font-size: 15px; font-weight: 600; color: #94A3B8; display: flex; justify-content: center; align-items: center; gap: 8px; cursor: not-allowed; transition: all 0.3s ease;
+  .arrow-icon { width: 18px; height: 18px; transition: transform 0.3s ease; }
+
+  /* Estado Activo */
+  &.active {
+    background-color: $gob-pe-red; color: $white; cursor: pointer; box-shadow: 0 8px 20px rgba(220, 54, 46, 0.25);
+    &:hover { background-color: #B91C1C; .arrow-icon { transform: translateX(4px); } }
+    &:active { transform: scale(0.98); }
+  }
+}
+
+/* Checkbox Circular (NUEVO) */
+  .check-circle {
+    width: 24px; height: 24px; border: 2px solid #CBD5E1; border-radius: 50%;
+    display: flex; justify-content: center; align-items: center; transition: all 0.2s ease;
+    background-color: transparent;
+    .check-icon { 
+      width: 14px; height: 14px; transform: scale(0); opacity: 0; 
+      transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+    }
+  }
+
+  
+@media (max-width: 850px) {
+  /* Reducimos los bordes laterales para ganar espacio */
+  .header-container {
+    padding: 0 16px;
+  }
+  
+  /* Ajustamos un poco el logo y evitamos que el texto baje de línea */
+  .logo-area {
+    gap: 10px;
+    .gob-pe-logo { height: 24px; }
+    .service-name { font-size: 14px; white-space: nowrap; }
+  }
+
+  .main-nav {
+    gap: 16px;
+    
+    /* Magia: Ocultamos todos los links que NO sean el botón de Salir */
+    .nav-link:not(.exit-link) { display: none; }
+    
+    /* Ocultamos los botones extra y separadores */
+    .user-btn { display: none; }
+    .vertical-separator { display: none; }
+    
+    .exit-link { font-size: 14px; }
+  }
+}
+
+/* Pantallas súper pequeñas (Ej: iPhone SE antiguo) */
+@media (max-width: 400px) {
+  .logo-area {
+    /* Si la pantalla es minúscula, ocultamos el nombre del servicio y dejamos solo el escudo */
+    .service-name { display: none; }
+    .vertical-separator { display: none; }
+  }
+}

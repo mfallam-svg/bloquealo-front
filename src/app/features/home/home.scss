@@ -1,0 +1,278 @@
+/* VARIABLES SCSS (Infalibles en Angular) */
+$gob-pe-red: #DC362E;
+$text-primary: #26292E;
+$text-secondary: #555869;
+$border-color: #E2E8F0;
+$bg-gray-input: #F8FAFC;
+$white: #FFFFFF;
+
+body {
+  margin: 0;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  color: $text-primary;
+  background-color: #F8FAFC;
+}
+
+/* --- MAIN HEADER --- */
+.main-header {
+  height: 61px;
+  background-color: $white;
+  border-bottom: 1px solid $border-color;
+  display: flex;
+  align-items: center;
+  position: relative;
+  z-index: 100;
+
+  .header-container {
+    max-width: 1400px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 0 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .logo-area {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      .gob-pe-logo { height: 30px; }
+      .vertical-separator { width: 1px; height: 24px; background-color: #CBD5E1; }
+      .service-name { font-weight: 500; font-size: 16px; color: $gob-pe-red; }
+    }
+
+    .main-nav {
+      display: flex;
+      gap: 32px;
+      .nav-link {
+        text-decoration: none; color: $text-primary; font-weight: 500; font-size: 15px;
+        transition: color 0.2s;
+        &:hover { color: $gob-pe-red; }
+      }
+    }
+  }
+}
+
+/* --- HERO SECTION ROJA --- */
+.hero-section {
+  background-color: $gob-pe-red; /* Color rojo garantizado */
+  color: $white;
+  padding: 30px 40px 90px 40px; 
+  border-bottom-left-radius: 30px;
+  border-bottom-right-radius: 30px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+
+  /* Ondas decorativas de fondo */
+  .bg-waves {
+    position: absolute;
+    bottom: -100px;
+    right: -100px;
+    width: 500px;
+    height: 500px;
+    border-radius: 50%;
+    border: 60px solid rgba(110, 110, 110, 0.075);
+    pointer-events: none;
+    &::before {
+      content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+      width: 300px; height: 300px; border-radius: 50%; border: 60px solid rgba(0, 0, 0, 0.04);
+    }
+  }
+
+  .hero-content {
+    max-width: 800px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    /* Cuadrito del escudo superior */
+    .shield-badge {
+      background-color: rgba(255, 255, 255, 0.2);
+      width: 52px;
+      height: 52px;
+      border-radius: 14px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 24px;
+      svg { width: 26px; height: 26px; color: $white; }
+    }
+
+    h1 { font-size: 30px; font-weight: 800; margin: 0 0 16px 0; letter-spacing: -1px; color: $white; }
+    .hero-subtitle { font-size: 16px; font-weight: 500; opacity: 0.95; margin: 0; }
+  }
+}
+
+/* --- TARJETA BLANCA DE VERIFICACIÓN --- */
+.verification-card-container {
+  display: flex;
+  justify-content: center;
+  padding: 0 20px;
+  position: relative;
+  z-index: 20;
+  margin-top: -50px; 
+}
+
+.verification-card {
+  background-color: $white;
+  max-width: 630px;
+  width: 100%;
+  border-radius: 30px;
+  padding: 30px;
+  box-shadow: 0px 15px 35px rgba(0, 0, 0, 0.08);
+
+  h2 {
+    font-size: 24px; font-weight: 700; color: $text-primary; margin: 0 0 8px 0;
+    display: flex; align-items: center; gap: 12px;
+    .fingerprint-icon { width: 26px; height: 26px; }
+  }
+
+  .card-subtitle { font-size: 14px; color: $text-secondary; margin: 0 0 32px 0; }
+}
+
+/* --- FORMULARIO --- */
+.verification-form {
+  margin-bottom: 24px;
+
+  .form-group {
+    margin-bottom: 24px;
+    label { display: block; font-size: 11px; font-weight: 700; color: $text-secondary; margin-bottom: 8px; letter-spacing: 0.5px; }
+
+    .document-type-mock {
+      height: 56px; background-color: $bg-gray-input; border-radius: 12px; padding: 0 20px;
+      display: flex; justify-content: space-between; align-items: center; font-size: 14px; color: $text-primary; font-weight: 500; border: 1px solid $border-color;
+      .lock-icon { width: 18px; height: 18px; }
+    }
+
+    .input-with-icon {
+      height: 56px; border: 1px solid $border-color; border-radius: 12px; display: flex; align-items: center; padding: 0 20px; gap: 12px; transition: 0.3s;
+      background-color: $white; /* AGREGADO: Para evitar fondos raros en el error */
+
+      &:focus-within { 
+        border-color: $text-secondary; /* AGREGADO: Gris más fuerte al escribir (mejor UX) */
+        box-shadow: 0 0 0 3px rgba(85, 88, 105, 0.1);
+      }
+      
+      /* AGREGADO: Soporte para tu versión con o sin icon-wrapper */
+      .icon-wrapper {
+        width: 34px; height: 34px; border-radius: 50%; display: flex; justify-content: center; align-items: center; background-color: #F1F5F9; color: #94A3B8; transition: all 0.3s ease;
+        .card-icon { width: 16px; height: 16px; }
+      }
+      .card-icon { width: 20px; height: 20px; transition: color 0.3s ease; }
+      
+      .separator-line { width: 1px; height: 24px; background-color: $border-color; transition: background-color 0.3s ease; }
+      
+      input {
+        border: none; flex: 1; height: 100%; font-size: 15px; font-weight: 500; color: $text-primary; padding: 0; outline: none; background: transparent;
+        &::placeholder { color: #B0B8C1; font-weight: 400; }
+      }
+
+      /* --- AGREGADO: ESTADO DE ERROR (Bordes y fondo rojo) --- */
+      &.has-error {
+        border-color: $gob-pe-red;
+        box-shadow: 0 0 0 3px rgba(220, 54, 46, 0.1);
+
+        .card-icon { color: $gob-pe-red; }
+        .separator-line { background-color: rgba(220, 54, 46, 0.2); }
+        .icon-wrapper { background-color: rgba(220, 54, 46, 0.1); color: $gob-pe-red; }
+      }
+    }
+
+    /* --- AGREGADO: MENSAJE DE ERROR ANIMADO --- */
+    .error-message {
+      display: flex; align-items: center; gap: 8px; margin-top: 12px;
+      padding: 12px 16px; background-color: #FEF2F2; border: 1px solid #FECACA;
+      border-radius: 8px; color: #B91C1C; font-size: 13px; font-weight: 500;
+      animation: slideDownFade 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+
+      svg { width: 16px; height: 16px; flex-shrink: 0; }
+    }
+  }
+
+  .continue-btn {
+    width: 100%; height: 56px; background-color: #E2E8F0; border: none; border-radius: 12px; font-size: 15px; font-weight: 600; color: #94A3B8;
+    display: flex; justify-content: center; align-items: center; gap: 8px; cursor: not-allowed; transition: all 0.3s ease;
+    .arrow-icon { width: 18px; height: 18px; transition: transform 0.3s ease; }
+
+    /* --- AGREGADO: ESTADO ACTIVO (8 dígitos correctos) --- */
+    &.active {
+      background-color: $gob-pe-red;
+      color: $white;
+      cursor: pointer;
+      box-shadow: 0 8px 20px rgba(220, 54, 46, 0.25);
+
+      &:hover {
+        background-color: #B91C1C;
+        .arrow-icon { transform: translateX(4px); }
+      }
+      
+      &:active { transform: scale(0.98); }
+    }
+  }
+}
+
+/* --- BOX DE INFORMACIÓN RENIEC --- */
+.validation-info-box {
+  background-color: $bg-gray-input; border: 1px solid $border-color; border-radius: 12px; padding: 16px 20px; display: flex; align-items: center; gap: 16px; margin-bottom: 32px;
+  .lock-info-icon { width: 20px; height: 20px; }
+  .info-text {
+    strong { display: block; font-size: 13px; color: $text-primary; margin-bottom: 2px; }
+    p { margin: 0; font-size: 12px; color: $text-secondary; }
+  }
+}
+
+/* --- LOGOS INSTITUCIONES ALIADAS --- */
+.allied-institutions {
+  text-align: center; border-top: 1px solid $border-color; padding-top: 24px;
+  .institutions-title { font-size: 10px; font-weight: 700; color: #94A3B8; margin: 0 0 16px 0; letter-spacing: 1px; }
+  .logos-grid {
+    display: flex; justify-content: center; align-items: center; gap: 24px;
+    img { height: 22px; object-fit: contain; filter: grayscale(100%) opacity(0.6); }
+  }
+}
+
+/* --- AGREGADO: ANIMACIÓN FLUIDA DEL MENSAJE DE ERROR --- */
+@keyframes slideDownFade {
+  0% { opacity: 0; transform: translateY(-10px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 850px) {
+  /* Reducimos los bordes laterales para ganar espacio */
+  .header-container {
+    padding: 0 16px;
+  }
+  
+  /* Ajustamos un poco el logo y evitamos que el texto baje de línea */
+  .logo-area {
+    gap: 10px;
+    .gob-pe-logo { height: 24px; }
+    .service-name { font-size: 14px; white-space: nowrap; }
+  }
+
+  .main-nav {
+    gap: 16px;
+    
+    /* Magia: Ocultamos todos los links que NO sean el botón de Salir */
+    .nav-link:not(.exit-link) { display: none; }
+    
+    /* Ocultamos los botones extra y separadores */
+    .user-btn { display: none; }
+    .vertical-separator { display: none; }
+    
+    .exit-link { font-size: 14px; }
+  }
+}
+
+/* Pantallas súper pequeñas (Ej: iPhone SE antiguo) */
+@media (max-width: 400px) {
+  .logo-area {
+    /* Si la pantalla es minúscula, ocultamos el nombre del servicio y dejamos solo el escudo */
+    .service-name { display: none; }
+    .vertical-separator { display: none; }
+  }
+}

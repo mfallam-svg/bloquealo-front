@@ -1,0 +1,109 @@
+/* VARIABLES SCSS */
+$gob-pe-red: #DC362E;
+$text-primary: #26292E;
+$text-secondary: #555869;
+$border-color: #E2E8F0;
+$white: #FFFFFF;
+
+body { margin: 0; font-family: 'Inter', sans-serif; color: $text-primary; background-color: #F8FAFC; }
+
+/* HEADER */
+.main-header { height: 61px; background-color: $white; border-bottom: 1px solid $border-color; display: flex; align-items: center; position: relative; z-index: 100; }
+.header-container { max-width: 1400px; width: 100%; margin: 0 auto; padding: 0 40px; display: flex; justify-content: space-between; align-items: center; }
+.logo-area { display: flex; align-items: center; gap: 15px; .gob-pe-logo { height: 30px; } .vertical-separator { width: 1px; height: 24px; background-color: #CBD5E1; } .service-name { font-weight: 500; font-size: 16px; color: $gob-pe-red; } }
+.main-nav { display: flex; gap: 32px; .nav-link { text-decoration: none; color: $text-primary; font-weight: 500; font-size: 15px; transition: color 0.2s; &:hover { color: $gob-pe-red; } } }
+
+/* HERO */
+.hero-section { background-color: $gob-pe-red; color: $white; padding: 30px 40px 90px 40px; border-bottom-left-radius: 30px; border-bottom-right-radius: 30px; text-align: center; position: relative; overflow: hidden; }
+.bg-waves { position: absolute; bottom: -100px; right: -100px; width: 500px; height: 500px; border-radius: 50%; border: 60px solid rgba(110, 110, 110, 0.075); pointer-events: none; &::before { content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 300px; height: 300px; border-radius: 50%; border: 60px solid rgba(0, 0, 0, 0.04); } }
+.hero-content { max-width: 800px; margin: 0 auto; position: relative; z-index: 10; display: flex; flex-direction: column; align-items: center; h1 { font-size: 30px; font-weight: 800; margin: 0 0 16px 0; letter-spacing: -1px; color: $white; } .hero-subtitle { font-size: 16px; font-weight: 500; opacity: 0.95; margin: 0; } }
+
+/* CARD FACIAL */
+.verification-card-container { display: flex; justify-content: center; padding: 0 20px; position: relative; z-index: 20; margin-top: -50px; }
+.facial-hero-content { margin-top: 20px; .hero-small-text { font-size: 14px; margin-top: 12px; opacity: 0.9; &.success-text { font-weight: 700; opacity: 1; } } }
+.facial-view-container { max-width: 500px; width: 100%; display: flex; flex-direction: column; gap: 24px; }
+.facial-card { background-color: $white; border-radius: 30px; padding: 40px; display: flex; justify-content: center; align-items: center; box-shadow: 0px 15px 35px rgba(0, 0, 0, 0.08); }
+
+/* ÓVALO ESCÁNER */
+.scanner-oval {
+  width: 260px; height: 360px; border-radius: 130px / 180px; 
+  background-color: #26292E; box-shadow: 0 0 0 6px #E8EDF2; 
+  position: relative; overflow: hidden; display: flex; justify-content: center; align-items: center;
+  transition: all 0.4s ease;
+
+  &.success { background-color: $gob-pe-red !important; box-shadow: 0 0 0 6px rgba(220, 54, 46, 0.15) !important; }
+
+  .grid-bg { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-size: 20px 20px; background-image: linear-gradient(to right, rgba(255, 255, 255, 0.04) 1px, transparent 1px), linear-gradient(to bottom, rgba(255, 255, 255, 0.04) 1px, transparent 1px); z-index: 1; }
+  .face-silhouette { width: 140px; height: 140px; margin-top: 20px; opacity: 0.8; z-index: 2; }
+  
+  .scanner-brackets {
+    position: absolute; top: 50px; bottom: 50px; left: 40px; right: 40px; z-index: 3;
+    span { position: absolute; width: 40px; height: 40px; border-color: #FFFFFF; border-style: solid; border-width: 0; }
+    .tl { top: 0; left: 0; border-top-width: 4px; border-left-width: 4px; border-top-left-radius: 16px; }
+    .tr { top: 0; right: 0; border-top-width: 4px; border-right-width: 4px; border-top-right-radius: 16px; }
+    .bl { bottom: 0; left: 0; border-bottom-width: 4px; border-left-width: 4px; border-bottom-left-radius: 16px; }
+    .br { bottom: 0; right: 0; border-bottom-width: 4px; border-right-width: 4px; border-bottom-right-radius: 16px; }
+  }
+
+  .scan-line {
+    position: absolute; left: 40px; right: 40px; height: 2px; background-color: $gob-pe-red; box-shadow: 0 0 12px 2px rgba(220, 54, 46, 0.9); z-index: 4; animation: laserScan 2s infinite ease-in-out alternate;
+    &::before { content: ''; position: absolute; bottom: 100%; left: 0; right: 0; height: 120px; background: linear-gradient(to top, rgba(220, 54, 46, 0.35) 0%, transparent 100%); pointer-events: none; }
+  }
+
+  /* ICONO ESCUDO (FORZADO AL FRENTE) */
+  .success-icon-wrapper {
+    position: absolute;
+    background-color: $white; width: 90px; height: 90px; border-radius: 50%;
+    display: flex; justify-content: center; align-items: center;
+    z-index: 100; /* Aseguramos que nada lo tape */
+    animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    svg { width: 45px; height: 45px; }
+  }
+}
+
+/* BOTÓN Y BARRA DE PROGRESO */
+.btn-red-full { width: 100%; height: 56px; background-color: $gob-pe-red; color: $white; border: none; border-radius: 12px; font-size: 16px; font-weight: 600; display: flex; justify-content: center; align-items: center; gap: 10px; cursor: pointer; box-shadow: 0 8px 20px rgba(220, 54, 46, 0.25); transition: all 0.2s ease; &:hover { background-color: #B91C1C; transform: translateY(-2px); } &:active { transform: scale(0.98); } }
+.progress-bar-wrapper { display: flex; justify-content: center; align-items: center; height: 56px; .progress-bar { width: 200px; height: 6px; background-color: #E2E8F0; border-radius: 10px; overflow: hidden; .progress-fill { height: 100%; width: 0%; background-color: $gob-pe-red; animation: fillProgress 3s linear forwards; } } }
+
+/* ANIMACIONES */
+.fade-in { animation: fadeIn 0.4s ease-out forwards; }
+@keyframes fadeIn { from { opacity: 0; transform: scale(0.98) translateY(10px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+@keyframes laserScan { 0% { top: 50px; } 100% { top: 310px; } }
+@keyframes popIn { 0% { transform: scale(0); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+@keyframes fillProgress { 0% { width: 0%; } 100% { width: 100%; } }
+
+@media (max-width: 850px) {
+  /* Reducimos los bordes laterales para ganar espacio */
+  .header-container {
+    padding: 0 16px;
+  }
+  
+  /* Ajustamos un poco el logo y evitamos que el texto baje de línea */
+  .logo-area {
+    gap: 10px;
+    .gob-pe-logo { height: 24px; }
+    .service-name { font-size: 14px; white-space: nowrap; }
+  }
+
+  .main-nav {
+    gap: 16px;
+    
+    /* Magia: Ocultamos todos los links que NO sean el botón de Salir */
+    .nav-link:not(.exit-link) { display: none; }
+    
+    /* Ocultamos los botones extra y separadores */
+    .user-btn { display: none; }
+    .vertical-separator { display: none; }
+    
+    .exit-link { font-size: 14px; }
+  }
+}
+
+/* Pantallas súper pequeñas (Ej: iPhone SE antiguo) */
+@media (max-width: 400px) {
+  .logo-area {
+    /* Si la pantalla es minúscula, ocultamos el nombre del servicio y dejamos solo el escudo */
+    .service-name { display: none; }
+    .vertical-separator { display: none; }
+  }
+}

@@ -1,0 +1,167 @@
+/* VARIABLES */
+$gob-pe-red: #DC362E; $text-primary: #26292E; $text-secondary: #555869; 
+$border-color: #E2E8F0; $bg-color: #F8FAFC; $white: #FFFFFF;
+$green-success: #1E8E3E; $bg-green: #E6F4EA;
+
+body { margin: 0; font-family: 'Inter', sans-serif; background-color: $bg-color; }
+
+/* HEADER NAVEGACIÓN (Actualizado con botones del mock) */
+.main-header { height: 61px; background-color: $white; border-bottom: 1px solid $border-color; display: flex; align-items: center; position: relative; z-index: 100; }
+.header-container { max-width: 1400px; width: 100%; margin: 0 auto; padding: 0 40px; display: flex; justify-content: space-between; align-items: center; }
+.logo-area { display: flex; align-items: center; gap: 15px; .gob-pe-logo { height: 30px; } .vertical-separator { width: 1px; height: 24px; background-color: #CBD5E1; } .service-name { font-weight: 500; font-size: 16px; color: $gob-pe-red; } }
+.main-nav { display: flex; align-items: center; gap: 24px; .vertical-separator { width: 1px; height: 20px; background-color: #E2E8F0; } .nav-link { text-decoration: none; color: $text-primary; font-weight: 500; font-size: 14px; transition: color 0.2s; &:hover { color: $gob-pe-red; } } .user-btn { width: 36px; height: 36px; border-radius: 50%; border: none; background-color: #F1F5F9; color: $text-secondary; display: flex; justify-content: center; align-items: center; cursor: pointer; svg { width: 18px; } } .exit-link { display: flex; align-items: center; gap: 6px; color: $text-secondary; svg { width: 16px; height: 16px; } } }
+
+/* ========================================== */
+/* ESTILOS: ESTADO PROCESANDO                 */
+/* ========================================== */
+.hero-processing { 
+  background-color: $gob-pe-red; color: $white; padding: 40px 40px 80px 40px; border-bottom-left-radius: 24px; border-bottom-right-radius: 24px; 
+  .hero-content { max-width: 1000px; margin: 0 auto; }
+  .badge-icon { display: inline-flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 700; letter-spacing: 0.5px; margin-bottom: 16px; color: $white; svg { width: 16px; } }
+  
+  /* Aquí forzamos el blanco para que no se vea negro */
+  h1 { font-size: 32px; font-weight: 800; margin: 0 0 8px 0; color: $white; }
+  p { font-size: 16px; opacity: 0.9; margin: 0; color: $white; }
+}
+
+.process-container {
+  max-width: 800px; margin: -40px auto 0; padding: 40px; background-color: $white; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); display: flex; flex-direction: column; align-items: center; text-align: center; position: relative; z-index: 10;
+  
+  .breadcrumbs-center { font-size: 11px; color: $text-secondary; margin-bottom: 24px; strong { color: $text-primary; } }
+  .title-dark { font-size: 28px; font-weight: 800; color: $text-primary; margin: 0 0 12px 0; line-height: 1.2; }
+  .subtitle-pill { background-color: #F1F5F9; color: $text-secondary; padding: 8px 24px; border-radius: 20px; font-size: 14px; font-weight: 600; margin-bottom: 40px; }
+}
+
+.shield-spinner-box {
+  position: relative; width: 100px; height: 100px; display: flex; justify-content: center; align-items: center; margin-bottom: 40px;
+  .spinner-ring { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 3px solid #F1F5F9; border-top-color: $gob-pe-red; border-radius: 50%; animation: spin 1s linear infinite; }
+  svg { width: 40px; height: 40px; }
+}
+
+.progress-section {
+  width: 100%; margin-bottom: 32px;
+  .progress-labels { display: flex; justify-content: space-between; font-size: 13px; color: $text-secondary; margin-bottom: 8px; strong { color: $text-primary; font-weight: 700; } }
+  .progress-track { width: 100%; height: 8px; background-color: #E2E8F0; border-radius: 4px; overflow: hidden; .progress-fill { height: 100%; background-color: $gob-pe-red; transition: width 0.3s linear; } }
+}
+
+.status-card {
+  width: 100%; padding: 16px 24px; border-radius: 12px; display: flex; align-items: center; gap: 16px; margin-bottom: 12px; text-align: left; transition: all 0.3s; border: 1px solid transparent;
+  .icon { width: 24px; height: 24px; display: flex; justify-content: center; align-items: center; flex-shrink: 0; svg { width: 20px; } }
+  .texts { strong { display: block; font-size: 14px; margin-bottom: 2px; } p { margin: 0; font-size: 13px; } }
+  
+  &.completado { background-color: #F0FDF4; border-color: #DCFCE7; color: #166534; .icon svg { color: #16A34A; } .texts p { color: #16A34A; font-weight: 600; } }
+  &.procesando { background-color: #FEF2F2; border-color: #FEE2E2; color: #991B1B; .icon .spinner-mini { width: 18px; height: 18px; border: 2px solid #FECACA; border-top-color: $gob-pe-red; border-radius: 50%; animation: spin 1s linear infinite; } .texts p { color: $gob-pe-red; font-weight: 600; } }
+  &.pendiente { background-color: #F8FAFC; border-color: #E2E8F0; color: #94A3B8; .texts p { color: #94A3B8; } }
+}
+
+.warning-footer { display: flex; justify-content: center; margin-top: 40px; margin-bottom: 40px; .warning-pill { border: 1px solid #FDE68A; background-color: #FFFBEB; color: #B45309; font-size: 13px; font-weight: 600; padding: 10px 24px; border-radius: 24px; display: flex; align-items: center; gap: 8px; .dot { width: 6px; height: 6px; background-color: #D97706; border-radius: 50%; } } }
+
+/* ========================================== */
+/* ESTILOS: ESTADO ÉXITO                      */
+/* ========================================== */
+.hero-success {
+  background: linear-gradient(180deg, #E6F4EA 0%, rgba(230, 244, 234, 0) 100%);
+  padding: 60px 20px 100px; display: flex; flex-direction: column; align-items: center; text-align: center;
+  
+  .success-icon-large { width: 80px; height: 80px; background-color: $white; border-radius: 50%; box-shadow: 0 10px 25px rgba(30, 142, 62, 0.15); display: flex; justify-content: center; align-items: center; margin-bottom: 24px; svg { width: 40px; } }
+  h1 { font-size: 32px; font-weight: 800; color: $text-primary; margin: 0 0 16px 0; }
+  p { font-size: 15px; color: $text-secondary; line-height: 1.5; max-width: 500px; margin: 0; }
+}
+
+.success-container {
+  max-width: 800px; margin: -50px auto 100px; padding: 0 20px;
+  
+  .ticket-info { background-color: $white; border: 1px solid $border-color; border-radius: 16px; display: flex; margin-bottom: 40px; box-shadow: 0 4px 6px rgba(0,0,0,0.02); .info-block { flex: 1; padding: 24px; display: flex; flex-direction: column; gap: 8px; &.border-right { border-right: 1px solid $border-color; } .label { font-size: 11px; font-weight: 700; color: $text-secondary; letter-spacing: 0.5px; } .value { font-size: 16px; font-weight: 700; color: $text-primary; } } }
+  
+  .section-title-green { display: flex; align-items: center; gap: 8px; font-size: 16px; font-weight: 700; color: #166534; margin-bottom: 16px; svg { width: 20px; } }
+
+  .result-card { background-color: $white; border: 1px solid $border-color; border-radius: 12px; margin-bottom: 16px; overflow: hidden; 
+    .rc-header { padding: 20px; display: flex; align-items: center; gap: 16px; border-bottom: 1px solid $border-color; .rc-icon { width: 40px; height: 40px; background-color: #F1F5F9; border-radius: 10px; display: flex; justify-content: center; align-items: center; color: #64748B; svg { width: 20px; } &.shield { background-color: #F0FDF4; color: #16A34A; } } .rc-title { flex: 1; strong { font-size: 15px; display: block; margin-bottom: 4px; color: $text-primary; } p { margin: 0; font-size: 13px; color: $text-secondary; } } .rc-status-icon { width: 24px; height: 24px; &.clock { color: #DC2626; } &.check { color: #16A34A; } svg { width: 100%; } } }
+    .rc-footer { display: flex; background-color: #FAFAFA; .col { flex: 1; padding: 12px 20px; display: flex; flex-direction: column; gap: 4px; span { font-size: 10px; font-weight: 700; color: $text-secondary; letter-spacing: 0.5px; } strong { font-size: 13px; color: $text-primary; } } }
+  }
+
+  /* Botones Finales Adaptados del Figma */
+  .final-actions { 
+    display: flex; flex-direction: column; gap: 12px; margin-top: 32px; 
+    
+    .btn-red, .btn-white { 
+      width: 100%; height: 56px; border-radius: 16px; font-size: 15px; font-weight: 700; 
+      display: flex; justify-content: center; align-items: center; gap: 10px; 
+      cursor: pointer; transition: all 0.2s ease; text-decoration: none; /* Para que el <a> no se subraye */
+      svg { width: 18px; transition: transform 0.2s; } 
+    }
+    
+    .btn-red { 
+      /* Degradado, borde y sombras extraídas del Tailwind */
+      background: linear-gradient(to bottom right, #FF3B4A, #D91023, #A30D1A);
+      color: $white; border: none;
+      border-top: 1px solid rgba(255, 59, 74, 0.5);
+      box-shadow: 0 8px 20px rgba(217, 16, 35, 0.25); 
+      
+      &:hover { 
+        filter: brightness(1.1); /* hover:brightness-110 */
+        box-shadow: 0 12px 28px rgba(217, 16, 35, 0.35); 
+        .chevron-icon { transform: translateX(4px); } /* group-hover:translate-x-1 */
+      } 
+      
+      &:active { transform: scale(0.98); } /* whileTap={{ scale: 0.98 }} */
+    }
+    
+    .btn-white { 
+      background-color: $white; color: #0A2540; border: 1px solid $border-color; box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+      &:hover { background-color: #F8FAFC; border-color: #CBD5E1; } 
+      &:active { transform: scale(0.98); }
+    }
+  }
+}
+
+/* ANIMACIONES */
+@keyframes spin { to { transform: rotate(360deg); } }
+.fade-in-up { animation: fadeInUp 0.5s ease-out forwards; opacity: 0; transform: translateY(20px); }
+.delay-1 { animation-delay: 0.2s; }
+.delay-2 { animation-delay: 0.4s; }
+@keyframes fadeInUp { to { opacity: 1; transform: translateY(0); } }
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .ticket-info { flex-direction: column; .info-block.border-right { border-right: none; border-bottom: 1px solid $border-color; } }
+  .rc-header { flex-direction: column; text-align: center; .rc-status-icon { position: absolute; top: 20px; right: 20px; } }
+  .process-container { padding: 30px 20px; margin: -20px 20px 0; }
+}
+
+
+@media (max-width: 850px) {
+  /* Reducimos los bordes laterales para ganar espacio */
+  .header-container {
+    padding: 0 16px;
+  }
+  
+  /* Ajustamos un poco el logo y evitamos que el texto baje de línea */
+  .logo-area {
+    gap: 10px;
+    .gob-pe-logo { height: 24px; }
+    .service-name { font-size: 14px; white-space: nowrap; }
+  }
+
+  .main-nav {
+    gap: 16px;
+    
+    /* Magia: Ocultamos todos los links que NO sean el botón de Salir */
+    .nav-link:not(.exit-link) { display: none; }
+    
+    /* Ocultamos los botones extra y separadores */
+    .user-btn { display: none; }
+    .vertical-separator { display: none; }
+    
+    .exit-link { font-size: 14px; }
+  }
+}
+
+/* Pantallas súper pequeñas (Ej: iPhone SE antiguo) */
+@media (max-width: 400px) {
+  .logo-area {
+    /* Si la pantalla es minúscula, ocultamos el nombre del servicio y dejamos solo el escudo */
+    .service-name { display: none; }
+    .vertical-separator { display: none; }
+  }
+}
