@@ -1,9 +1,8 @@
-// ==========================================
-// 1. CONTRATOS DE AUTENTICACIÓN (RENIEC)
-// ==========================================
+// RENIEC
+
 export interface ValidacionReniecPayload {
   dni: string;
-  biometriaExitosa: boolean; // El resultado del facevalidar
+  biometriaExitosa: boolean;
 }
 
 export interface UsuarioReniec {
@@ -14,9 +13,9 @@ export interface UsuarioReniec {
   autenticado: boolean;
 }
 
-// ==========================================
-// 2. CONTRATOS DE LÍNEAS MÓVILES
-// ==========================================
+
+// LÍNEAS MÓVILES
+
 export interface LineaMovil {
   id: number;
   numero: string;
@@ -24,11 +23,9 @@ export interface LineaMovil {
   estado: string;
 }
 
-// ==========================================
-// 3. CONTRATOS DE LA SOLICITUD FINAL
-// ==========================================
 
-// Los datos del robo/pérdida
+// SOLICITUD FINAL
+
 export interface DatosIncidente {
   modalidad: string;
   departamento: string;
@@ -41,19 +38,19 @@ export interface DatosIncidente {
   correoNotificacion: string;
 }
 
-// EL PAQUETE COMPLETO QUE VIAJA AL BACKEND
+// BACKEND
 export interface SolicitudBloqueoPayload {
-  usuarioDni: string;          // Saber de quién es el trámite
-  lineasIds: number[];         // Solo enviamos los IDs de las líneas que seleccionó
+  usuarioDni: string;          
+  lineasIds: number[];         
   acciones: {
-    bloqueoLinea: boolean;     // ¿Marcó el check de bloquear línea?
-    reportePolicia: boolean;   // ¿Marcó el check de reporte policial?
+    bloqueoLinea: boolean;     
+    reportePolicia: boolean;   
   };
-  // Si no hizo reporte policial, esto viaja como "null"
+  
   datosIncidente: DatosIncidente | null; 
 }
 
-// La respuesta oficial del servidor para generar el Ticket
+// Ggenerar el Ticket
 export interface TicketRespuesta {
   exito: boolean;
   codigoSolicitud: string;

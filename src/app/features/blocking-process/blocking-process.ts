@@ -34,15 +34,15 @@ export class BlockingProcessComponent implements OnInit {
   constructor(
     private router: Router, 
     private cdr: ChangeDetectorRef,
-    private apiService: ApiService // 2. INYECTAMOS EL SERVICIO
+    private apiService: ApiService 
   ) {
     const navigation = this.router.getCurrentNavigation();
     if (navigation?.extras.state && navigation.extras.state['payload']) {
-      // Atrapamos el Payload
+      
       this.payloadRecibido = navigation.extras.state['payload'];
       this.cantidadAcciones = navigation.extras.state['cantidad'] || 2;
       
-      // Ajustamos los checks según lo que haya marcado el usuario
+      
       this.hizoBloqueo = this.payloadRecibido.acciones.bloqueoLinea;
       this.hizoReporte = this.payloadRecibido.acciones.reportePolicia;
     } else {
@@ -84,7 +84,7 @@ export class BlockingProcessComponent implements OnInit {
     if (this.payloadRecibido) {
       this.apiService.procesarSolicitudBloqueo(this.payloadRecibido).subscribe({
         next: (respuesta: TicketRespuesta) => {
-          // Cuando el servidor responde con éxito, sacamos SU código y SU fecha
+          
           this.codigoSolicitud = respuesta.codigoSolicitud;
           this.formatearFechaBackend(respuesta.fechaProcesamiento);
         },

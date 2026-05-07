@@ -16,11 +16,11 @@
 
 <main class="blocking-main">
 
-  <!-- ========================================== -->
-  <!-- ESTADO 1: PROCESANDO                       -->
-  <!-- ========================================== -->
+  
+  <!-- PROCESANDO -->
+  
   <ng-container *ngIf="estadoActual === 'procesando'">
-    <!-- Hero Rojo -->
+    <!-- Caja Roja -->
     <section class="hero-processing">
       <div class="hero-content">
         <div class="badge-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg> SERVICIOS PROTEGIDOS</div>
@@ -83,11 +83,11 @@
   </ng-container>
 
 
-  <!-- ========================================== -->
-  <!-- ESTADO 2: COMPLETADO / ÉXITO               -->
-  <!-- ========================================== -->
+  
+  <!-- COMPLETADO -->
+  
   <ng-container *ngIf="estadoActual === 'completado'">
-    <!-- Hero Verde -->
+    <!-- Caja verde -->
     <section class="hero-success">
       <div class="success-icon-large">
         <svg viewBox="0 0 24 24" fill="none" stroke="#1E8E3E" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
@@ -99,7 +99,7 @@
     <!-- Contenido Éxito -->
     <section class="success-container fade-in-up delay-2">
       
-      <!-- Ticket Info -->
+      <!-- Informacion del ticket -->
       <div class="ticket-info">
         <div class="info-block border-right">
           <span class="label">FECHA Y HORA SOLICITUD</span>
@@ -150,7 +150,7 @@
 
       <!-- Botones Finales -->
       <div class="final-actions">
-        <!-- Convertimos a enlace con href="tel:1820" para abrir el teclado del celular -->
+        
         <a href="tel:1820" class="btn-red">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg> 
           Llamar al 1820 (contactar a bancos) 
