@@ -15,7 +15,7 @@ import {
 })
 export class ApiService {
   
-  private readonly API_URL = 'http://localhost:3000';
+  private readonly API_URL = 'https://bloquealo-backend.onrender.com';
 
   constructor(private http: HttpClient) { }
 
