@@ -1,8 +1,6 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-
-// 1. IMPORTAMOS EL SERVICIO Y LOS CONTRATOS
 import { ApiService } from '../../core/services/api.service';
 import { SolicitudBloqueoPayload, TicketRespuesta } from '../../core/models/bloqueo.models';
 
@@ -24,11 +22,11 @@ export class BlockingProcessComponent implements OnInit {
   hizoBloqueo: boolean = true;
   hizoReporte: boolean = true;
   
-  // Estas variables se llenarán con lo que responda el Backend
+  
   codigoSolicitud: string = '';
   fechaSolicitud: string = '';
   
-  // Aquí guardamos el Payload que nos envía la pantalla anterior
+  
   payloadRecibido!: SolicitudBloqueoPayload;
 
   constructor(
@@ -79,7 +77,7 @@ export class BlockingProcessComponent implements OnInit {
     }, 60); 
   }
 
-  // 3. LA LLAMADA OFICIAL AL BACKEND
+  
   procesarEnBackend() {
     if (this.payloadRecibido) {
       this.apiService.procesarSolicitudBloqueo(this.payloadRecibido).subscribe({
@@ -96,8 +94,7 @@ export class BlockingProcessComponent implements OnInit {
   }
 
   formatearFechaBackend(fechaISO: string) {
-    // Transformamos la fecha que manda el servidor al formato que te gustó:
-    // "06 de mayo del 2026 - 05:46 p. m."
+    
     const fecha = new Date(fechaISO);
     
     const dia = fecha.getDate().toString().padStart(2, '0');

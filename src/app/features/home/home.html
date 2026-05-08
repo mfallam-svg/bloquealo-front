@@ -5,16 +5,13 @@
       <div class="vertical-separator"></div>
       <span class="service-name">Servicio Bloquéalo</span>
     </div>
-    
   </div>
 </header>
 
 <main class="home-main">
-  <!-- SECCIÓN HERO ROJA -->
   <section class="hero-section">
     <div class="bg-waves"></div>
     
-    <!-- Textos para vista DNI -->
     <div class="hero-content fade-in" *ngIf="currentView === 'dni'">
       <div class="shield-badge">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -27,7 +24,6 @@
       <p class="hero-subtitle">En segundos protege tu línea, tus cuentas y reporta el robo.</p>
     </div>
 
-    <!-- Textos para vista FACIAL -->
     <div class="hero-content facial-hero-content fade-in" *ngIf="currentView === 'facial'">
       <h1>Reconocimiento facial</h1>
       <p class="hero-subtitle">Verifique su identidad mirando al frente</p>
@@ -38,7 +34,6 @@
   
   <section class="verification-card-container">
     
-    <!-- TARJETA 1: DNI -->
     <div class="verification-card fade-in" *ngIf="currentView === 'dni'">
       <h2>
         <svg class="fingerprint-icon" viewBox="0 0 24 24" fill="none" stroke="#DC362E" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
@@ -74,9 +69,9 @@
           </div>
         </div>
         
-        <button type="button" class="continue-btn" [class.active]="isDniValid" [disabled]="!isDniValid" (click)="continuar()">
-          Continuar
-          <svg class="arrow-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        <button type="button" class="continue-btn" [class.active]="isDniValid && !estaCargando" [disabled]="!isDniValid || estaCargando" (click)="continuar()">
+          {{ estaCargando ? 'Verificando con RENIEC...' : 'Continuar' }}
+          <svg *ngIf="!estaCargando" class="arrow-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
         </button>
       </form>
       
@@ -98,6 +93,23 @@
         </div>
       </div>
     </div>
-    
   </section>
+
+  <div class="modal-overlay" *ngIf="mostrarModalError" (click)="mostrarModalError = false">
+    <div class="error-modal fade-in-scale" (click)="$event.stopPropagation()">
+      <div class="modal-header-error">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line>
+        </svg>
+        <h3>Validación Fallida</h3>
+      </div>
+      <div class="modal-body">
+        <p>{{ mensajeError }}</p>
+        <span class="sub-text">Por favor, verifique el número ingresado e inténtelo nuevamente.</span>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-error-close" (click)="mostrarModalError = false">Aceptar</button>
+      </div>
+    </div>
+  </div>
 </main>

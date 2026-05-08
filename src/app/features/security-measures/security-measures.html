@@ -32,7 +32,6 @@
         </div>
         <svg class="chevron" [class.open]="mostrarLineas" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
       </div>
-      
       <div class="accordion-body" *ngIf="mostrarLineas">
         <div class="mini-line-card" *ngFor="let l of lineasSeleccionadas">
           <div class="col"><span class="lbl">Línea</span><span class="val">{{ l.numero }}</span></div>
@@ -42,14 +41,21 @@
       </div>
     </div>
 
-    <label class="action-card" [class.selected]="bloqueoLinea">
-      <input type="checkbox" [(ngModel)]="bloqueoLinea" hidden>
-      <div class="icon-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect><line x1="12" y1="18" x2="12.01" y2="18"></line></svg></div>
+    <label class="action-card disabled-card">
+      <input type="checkbox" checked disabled hidden>
+      <div class="icon-box">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect><line x1="12" y1="18" x2="12.01" y2="18"></line></svg>
+      </div>
       <div class="text-box">
         <strong>Bloqueo de la línea móvil</strong>
-        <p>Se bloqueará la línea móvil del dispositivo</p>
+        <p>Acción obligatoria para la seguridad del dispositivo</p>
       </div>
-      <div class="check-circle"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
+      <div class="lock-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+          <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+        </svg>
+      </div>
     </label>
 
     <label class="action-card" [class.selected]="reportePolicia">
@@ -62,15 +68,11 @@
       <div class="check-circle"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
     </label>
 
-    <div class="alert-box critical-alert" *ngIf="mostrarAlertaBloqueo">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
-      <div class="alert-texts">
-        <strong>Debe seleccionar al menos una acción de bloqueo junto con el reporte policial</strong>
-        <p>Se recomienda bloquear también la línea para evitar usos indebidos</p>
-      </div>
+    <div class="form-group" style="margin-top: 24px; margin-bottom: 24px;">
+      <label>CORREO ELECTRÓNICO (Para enviar constancia del trámite) *</label>
+      <input type="email" placeholder="Ej: usuario@correo.com" [(ngModel)]="incidente.correo" class="full-width-input">
     </div>
 
-    <!-- FORMULARIO DE INCIDENTE -->
     <div class="incident-form-box" *ngIf="reportePolicia">
       <h3 class="section-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg> Datos del incidente</h3>
       
@@ -84,18 +86,28 @@
       </div>
 
       <div class="form-group">
-        <!-- LINK ACTUALIZADO PARA ABRIR MAPA 
-        <label class="stacked-label">
-          <span>UBICACIÓN DEL INCIDENTE *</span>
-          <a href="#" class="map-link" (click)="abrirMapa($event)">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg> 
-            Ubicar en mapa
-          </a>
-        </label>-->
         <div class="grid-3">
-          <div class="input-col"><label>DEPARTAMENTO</label><select [(ngModel)]="incidente.departamento"><option value="">Seleccionar</option><option *ngFor="let d of departamentos" [value]="d">{{d}}</option></select></div>
-          <div class="input-col"><label>PROVINCIA</label><select [(ngModel)]="incidente.provincia"><option value="">Seleccionar</option><option *ngFor="let p of provincias" [value]="p">{{p}}</option></select></div>
-          <div class="input-col"><label>DISTRITO</label><select [(ngModel)]="incidente.distrito"><option value="">Seleccionar</option><option *ngFor="let d of distritos" [value]="d">{{d}}</option></select></div>
+          <div class="input-col">
+            <label>DEPARTAMENTO</label>
+            <select [(ngModel)]="incidente.departamento" (change)="onDepartamentoChange()">
+              <option value="">Seleccionar</option>
+              <option *ngFor="let d of departamentosPeru" [value]="d.nombre">{{d.nombre}}</option>
+            </select>
+          </div>
+          <div class="input-col">
+            <label>PROVINCIA</label>
+            <select [(ngModel)]="incidente.provincia" (change)="onProvinciaChange()" [disabled]="!incidente.departamento">
+              <option value="">Seleccionar</option>
+              <option *ngFor="let p of provinciasDisponibles" [value]="p.nombre">{{p.nombre}}</option>
+            </select>
+          </div>
+          <div class="input-col">
+            <label>DISTRITO</label>
+            <select [(ngModel)]="incidente.distrito" [disabled]="!incidente.provincia">
+              <option value="">Seleccionar</option>
+              <option *ngFor="let d of distritosDisponibles" [value]="d">{{d}}</option>
+            </select>
+          </div>
         </div>
         <div class="grid-2 mt-3">
           <div class="input-col"><label>CALLE/AV</label><input type="text" placeholder="Ej: Av. Arequipa" [(ngModel)]="incidente.calle"></div>
@@ -104,7 +116,6 @@
       </div>
 
       <div class="grid-2 form-group">
-        
         <div class="input-col">
           <label>FECHA DEL INCIDENTE *</label>
           <div class="custom-input-wrapper">
@@ -120,58 +131,56 @@
             <input type="text" placeholder="--:--" [value]="incidente.hora" readonly>
           </div>
         </div>
+      </div>
+      
+      <div class="modal-overlay" *ngIf="mostrarReloj" (click)="mostrarReloj = false">
+        <div class="digital-clock-modal fade-in-scale" (click)="$event.stopPropagation()">
+    
+          <div class="modal-header-red">
+            <h3>SELECCIONAR HORA</h3>
+          </div>
 
+          <div class="digital-picker-body">
+            <div class="picker-col">
+              <button class="arrow-btn" (click)="cambiarHora(1)">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="18 15 12 9 6 15"></polyline></svg>
+              </button>
+              <div class="time-box">{{ horaSel < 10 ? '0' + horaSel : horaSel }}</div>
+              <button class="arrow-btn" (click)="cambiarHora(-1)">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="6 9 12 15 18 9"></polyline></svg>
+              </button>
+            </div>
+
+            <div class="time-divider">:</div>
+
+            <div class="picker-col">
+              <button class="arrow-btn" (click)="cambiarMinuto(1)">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="18 15 12 9 6 15"></polyline></svg>
+              </button>
+              <div class="time-box">{{ minutoSel < 10 ? '0' + minutoSel : minutoSel }}</div>
+              <button class="arrow-btn" (click)="cambiarMinuto(-1)">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="6 9 12 15 18 9"></polyline></svg>
+              </button>
+            </div>
+
+            <div class="ampm-col">
+              <button class="ampm-btn" [class.active]="periodoSel === 'AM'" (click)="setPeriodo('AM')">AM</button>
+              <button class="ampm-btn" [class.active]="periodoSel === 'PM'" (click)="setPeriodo('PM')">PM</button>
+            </div>
+          </div>
+
+          <div class="modal-footer">
+            <button class="btn-cancel" (click)="mostrarReloj = false">CANCELAR</button>
+            <button class="btn-confirm" (click)="confirmarHora()">ACEPTAR</button>
+          </div>
+        </div>
       </div>
 
-<div class="modal-overlay" *ngIf="mostrarReloj" (click)="mostrarReloj = false">
-  <div class="clock-modal fade-in-scale" (click)="$event.stopPropagation()">
-    <div class="clock-header">
-      <span [class.active]="relojModo === 'horas'">{{ horaTemporal }}</span>
-      <span class="separator">:</span>
-      <span [class.active]="relojModo === 'minutos'">{{ minutoTemporal }}</span>
     </div>
 
-    <div class="clock-face-container">
-      <div class="clock-face">
-        <div class="clock-center"></div>
-        
-        <div class="clock-hand" [style.transform]="relojModo === 'horas' ? 'rotate(' + (+horaTemporal * 30) + 'deg)' : 'rotate(' + (+minutoTemporal * 6) + 'deg)'"></div>
-
-        <ng-container *ngIf="relojModo === 'horas'">
-          <button *ngFor="let h of horasReloj; let i = index" 
-                  class="clock-number" 
-                  [style.transform]="'rotate(' + (i * 30 - 90) + 'deg) translate(90px) rotate(' + (-(i * 30 - 90)) + 'deg)'"
-                  (click)="seleccionarHoraReloj(h)">
-            {{ h }}
-          </button>
-        </ng-container>
-
-        <ng-container *ngIf="relojModo === 'minutos'">
-          <button *ngFor="let m of minutosReloj; let i = index" 
-                  class="clock-number minute" 
-                  [style.transform]="'rotate(' + (i * 30 - 90) + 'deg) translate(90px) rotate(' + (-(i * 30 - 90)) + 'deg)'"
-                  (click)="seleccionarMinutoReloj(m)">
-            {{ m }}
-          </button>
-        </ng-container>
-      </div>
-    </div>
-
-    <div class="clock-footer">
-      <button class="btn-text" (click)="mostrarReloj = false">CANCELAR</button>
-    </div>
-  </div>
-</div>
-
-      <div class="form-group">
-        <label>CORREO ELECTRÓNICO (Para notificaciones) *</label>
-        <input type="email" placeholder="Ej: usuario@correo.com" [(ngModel)]="incidente.correo" class="full-width-input">
-      </div>
-
-      <div class="alert-box warning-alert" *ngIf="!esFormularioValido && !mostrarAlertaBloqueo">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
-        <div class="alert-texts"><p>Complete todos los campos para continuar</p></div>
-      </div>
+    <div class="alert-box warning-alert" *ngIf="!esFormularioValido">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+      <div class="alert-texts"><p>Debe ingresar un correo válido y completar los campos requeridos.</p></div>
     </div>
   </section>
 
@@ -185,60 +194,3 @@
     </button>
   </div>
 </main>
-
-<!-- MODAL DEL MAPA -->
- <!-- 
-<div class="modal-overlay" *ngIf="mostrarModalMapa">
-  <div class="map-modal fade-in-up">
-    
-    <div class="modal-header">
-      <div class="title-area">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
-        <div>
-          <h3>Ubicar en mapa</h3>
-          <p>Confirme la ubicación donde ocurrió el robo</p>
-        </div>
-      </div>
-      <button class="close-btn" (click)="cerrarMapa()">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-      </button>
-    </div>
-    
-    
-    <div class="modal-body">
-      <div class="map-view">
-        <div class="grid-overlay"></div>
-        <div class="pin-container" [class.searching]="buscandoUbicacion">
-          <div class="pulse" *ngIf="buscandoUbicacion"></div>
-          
-          <svg class="pin-icon" viewBox="0 0 24 24" fill="#DC362E" stroke="#B91C1C" stroke-width="1.5">
-            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
-          </svg>
-        </div>
-      </div>
-
-      
-      <div class="location-info-box" *ngIf="!buscandoUbicacion">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#DC362E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
-        <div class="texts">
-          <strong>Ubicación detectada</strong>
-          <p>Se utilizará tu ubicación actual para llenar automáticamente los campos de dirección.</p>
-        </div>
-      </div>
-      
-      <div class="location-info-box searching-state" *ngIf="buscandoUbicacion">
-        <div class="spinner"></div>
-        <div class="texts">
-          <strong>Buscando señal GPS...</strong>
-          <p>Por favor, espere mientras calibramos su ubicación.</p>
-        </div>
-      </div>
-    </div>
-    
-   
-    <div class="modal-footer">
-      <button class="btn-primary" [disabled]="buscandoUbicacion" (click)="confirmarUbicacion()">Confirmar ubicación</button>
-      <button class="btn-secondary" (click)="cerrarMapa()">Cancelar</button>
-    </div>
-  </div>
-</div> -->

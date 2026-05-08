@@ -1,4 +1,3 @@
-/* VARIABLES SCSS (Infalibles en Angular) */
 $gob-pe-red: #DC362E;
 $text-primary: #26292E;
 $text-secondary: #555869;
@@ -13,7 +12,6 @@ body {
   background-color: #F8FAFC;
 }
 
-/* --- MAIN HEADER --- */
 .main-header {
   height: 61px;
   background-color: $white;
@@ -53,9 +51,9 @@ body {
   }
 }
 
-/* --- HERO SECTION ROJA --- */
+
 .hero-section {
-  background-color: $gob-pe-red; /* Color rojo garantizado */
+  background-color: $gob-pe-red; 
   color: $white;
   padding: 30px 40px 90px 40px; 
   border-bottom-left-radius: 30px;
@@ -64,8 +62,7 @@ body {
   position: relative;
   overflow: hidden;
 
-  /* Ondas decorativas de fondo */
-  .bg-waves {
+ .bg-waves {
     position: absolute;
     bottom: -100px;
     right: -100px;
@@ -89,7 +86,7 @@ body {
     flex-direction: column;
     align-items: center;
 
-    /* Cuadrito del escudo superior */
+    
     .shield-badge {
       background-color: rgba(255, 255, 255, 0.2);
       width: 52px;
@@ -107,7 +104,7 @@ body {
   }
 }
 
-/* --- TARJETA BLANCA DE VERIFICACIÓN --- */
+
 .verification-card-container {
   display: flex;
   justify-content: center;
@@ -134,7 +131,7 @@ body {
   .card-subtitle { font-size: 14px; color: $text-secondary; margin: 0 0 32px 0; }
 }
 
-/* --- FORMULARIO --- */
+
 .verification-form {
   margin-bottom: 24px;
 
@@ -150,14 +147,14 @@ body {
 
     .input-with-icon {
       height: 56px; border: 1px solid $border-color; border-radius: 12px; display: flex; align-items: center; padding: 0 20px; gap: 12px; transition: 0.3s;
-      background-color: $white; /* AGREGADO: Para evitar fondos raros en el error */
+      background-color: $white; 
 
       &:focus-within { 
-        border-color: $text-secondary; /* AGREGADO: Gris más fuerte al escribir (mejor UX) */
+        border-color: $text-secondary; 
         box-shadow: 0 0 0 3px rgba(85, 88, 105, 0.1);
       }
       
-      /* AGREGADO: Soporte para tu versión con o sin icon-wrapper */
+      
       .icon-wrapper {
         width: 34px; height: 34px; border-radius: 50%; display: flex; justify-content: center; align-items: center; background-color: #F1F5F9; color: #94A3B8; transition: all 0.3s ease;
         .card-icon { width: 16px; height: 16px; }
@@ -171,7 +168,7 @@ body {
         &::placeholder { color: #B0B8C1; font-weight: 400; }
       }
 
-      /* --- AGREGADO: ESTADO DE ERROR (Bordes y fondo rojo) --- */
+      
       &.has-error {
         border-color: $gob-pe-red;
         box-shadow: 0 0 0 3px rgba(220, 54, 46, 0.1);
@@ -182,7 +179,7 @@ body {
       }
     }
 
-    /* --- AGREGADO: MENSAJE DE ERROR ANIMADO --- */
+    
     .error-message {
       display: flex; align-items: center; gap: 8px; margin-top: 12px;
       padding: 12px 16px; background-color: #FEF2F2; border: 1px solid #FECACA;
@@ -198,7 +195,7 @@ body {
     display: flex; justify-content: center; align-items: center; gap: 8px; cursor: not-allowed; transition: all 0.3s ease;
     .arrow-icon { width: 18px; height: 18px; transition: transform 0.3s ease; }
 
-    /* --- AGREGADO: ESTADO ACTIVO (8 dígitos correctos) --- */
+    
     &.active {
       background-color: $gob-pe-red;
       color: $white;
@@ -215,7 +212,7 @@ body {
   }
 }
 
-/* --- BOX DE INFORMACIÓN RENIEC --- */
+
 .validation-info-box {
   background-color: $bg-gray-input; border: 1px solid $border-color; border-radius: 12px; padding: 16px 20px; display: flex; align-items: center; gap: 16px; margin-bottom: 32px;
   .lock-info-icon { width: 20px; height: 20px; }
@@ -225,7 +222,7 @@ body {
   }
 }
 
-/* --- LOGOS INSTITUCIONES ALIADAS --- */
+
 .allied-institutions {
   text-align: center; border-top: 1px solid $border-color; padding-top: 24px;
   .institutions-title { font-size: 10px; font-weight: 700; color: #94A3B8; margin: 0 0 16px 0; letter-spacing: 1px; }
@@ -235,19 +232,96 @@ body {
   }
 }
 
-/* --- AGREGADO: ANIMACIÓN FLUIDA DEL MENSAJE DE ERROR --- */
+
+.modal-overlay {
+  position: fixed; 
+  top: 0; 
+  left: 0; 
+  width: 100vw; 
+  height: 100vh;
+  background: rgba(15, 23, 42, 0.7); 
+  backdrop-filter: blur(4px);
+  display: flex; 
+  align-items: center; 
+  justify-content: center; 
+  z-index: 2000;
+}
+
+.fade-in-scale { 
+  animation: scaleUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; 
+}
+
+@keyframes scaleUp { 
+  from { opacity: 0; transform: scale(0.95) translateY(10px); } 
+  to { opacity: 1; transform: scale(1) translateY(0); } 
+}
+
+.error-modal {
+  background: white; 
+  border-radius: 12px; 
+  width: 90%; 
+  max-width: 340px; 
+  overflow: hidden; 
+  box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+
+  .modal-header-error {
+    background: #DC362E; 
+    color: white; 
+    padding: 20px; 
+    text-align: center; 
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; 
+    gap: 10px;
+    
+    svg { width: 40px; height: 40px; }
+    h3 { margin: 0; font-size: 1.1rem; font-weight: 700; letter-spacing: 0.5px; color:wheat; }
+  }
+
+  .modal-body {
+    padding: 24px 20px; 
+    text-align: center;
+    
+    p { margin: 0 0 8px 0; font-size: 15px; font-weight: 600; color: #1e293b; }
+    .sub-text { font-size: 13px; color: #64748b; line-height: 1.4; display: block; }
+  }
+
+  .modal-footer {
+    padding: 16px 20px; 
+    border-top: 1px solid #f1f5f9; 
+    background: #fafafa; 
+    display: flex; 
+    justify-content: center;
+    
+    .btn-error-close {
+      background: #DC362E; 
+      color: white; 
+      border: none; 
+      padding: 12px 30px; 
+      border-radius: 8px; 
+      font-weight: 700; 
+      font-size: 14px; 
+      cursor: pointer; 
+      transition: background 0.2s; 
+      width: 100%;
+      
+      &:hover { background: #B91C1C; }
+    }
+  }
+}
+
+
 @keyframes slideDownFade {
   0% { opacity: 0; transform: translateY(-10px); }
   100% { opacity: 1; transform: translateY(0); }
 }
 
 @media (max-width: 850px) {
-  /* Reducimos los bordes laterales para ganar espacio */
+  
   .header-container {
     padding: 0 16px;
   }
   
-  /* Ajustamos un poco el logo y evitamos que el texto baje de línea */
   .logo-area {
     gap: 10px;
     .gob-pe-logo { height: 24px; }
@@ -255,23 +329,17 @@ body {
   }
 
   .main-nav {
-    gap: 16px;
-    
-    /* Magia: Ocultamos todos los links que NO sean el botón de Salir */
-    .nav-link:not(.exit-link) { display: none; }
-    
-    /* Ocultamos los botones extra y separadores */
+    gap: 16px;    
+    .nav-link:not(.exit-link) { display: none; }       
     .user-btn { display: none; }
-    .vertical-separator { display: none; }
-    
+    .vertical-separator { display: none; }    
     .exit-link { font-size: 14px; }
   }
 }
 
-/* Pantallas súper pequeñas (Ej: iPhone SE antiguo) */
+
 @media (max-width: 400px) {
-  .logo-area {
-    /* Si la pantalla es minúscula, ocultamos el nombre del servicio y dejamos solo el escudo */
+  .logo-area {    
     .service-name { display: none; }
     .vertical-separator { display: none; }
   }

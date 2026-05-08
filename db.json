@@ -1,0 +1,85 @@
+{
+  "ubigeo": [
+    {
+      "nombre": "Lambayeque",
+      "provincias": [
+        {
+          "nombre": "Chiclayo",
+          "distritos": [
+            "Chiclayo",
+            "José Leonardo Ortiz",
+            "La Victoria",
+            "Pimentel"
+          ]
+        }
+      ],
+      "id": "WH-3PPZymXM"
+    },
+    {
+      "nombre": "Lima",
+      "provincias": [
+        {
+          "nombre": "Lima",
+          "distritos": [
+            "Miraflores",
+            "San Borja",
+            "San Isidro"
+          ]
+        }
+      ],
+      "id": "wwKQNnhRkiA"
+    }
+  ],
+  "lineas": [
+    {
+      "id": "1",
+      "dni": "75906610",
+      "numero": "966 053 100",
+      "operador": "Claro",
+      "estado": "Activo"
+    },
+    {
+      "id": "2",
+      "dni": "75906610",
+      "numero": "987 456 321",
+      "operador": "Movistar",
+      "estado": "Activo"
+    }
+  ],
+  "solicitudes-bloqueo": [
+    {
+      "usuarioDni": "75906610",
+      "lineasIds": [
+        "1",
+        "2"
+      ],
+      "correoNotificacion": "fallamejiaj75@gmail.com",
+      "acciones": {
+        "bloqueoLinea": true,
+        "reportePolicia": true
+      },
+      "datosIncidente": {
+        "modalidad": "Robo",
+        "departamento": "Lambayeque",
+        "provincia": "Chiclayo",
+        "distrito": "José Leonardo Ortiz",
+        "calle": "Dorado",
+        "referencia": "El Doctor",
+        "fecha": "2026-05-07",
+        "hora": "08:50 a. m."
+      },
+      "id": "WAN6obZc5v8"
+    }
+  ],
+  "validaciones-reniec": [
+    {
+      "dni": "75906610",
+      "nombres": "MARCOS JEAMPIERRE",
+      "apellidoPaterno": "FALLA",
+      "apellidoMaterno": "MEJIA",
+      "autenticado": true,
+      "id": "W12uZuPtIaQ"
+    }
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
+}

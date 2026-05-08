@@ -16,23 +16,35 @@ export class DashboardComponent implements OnInit {
   lineas: LineaMovil[] = [];
   lineasSeleccionadasIds: number[] = [];
   cargandoLineas: boolean = true; 
+    
+  usuarioActivo: any = null;
 
-  // INYECTAMOS EL CHANGEDETECTORREF AQUÍ
   constructor(
     private router: Router,
     private apiService: ApiService,
     private cdr: ChangeDetectorRef 
-  ) {}
+  ) {
+    
+    const navigation = this.router.getCurrentNavigation();
+    if (navigation?.extras.state && navigation.extras.state['usuario']) {
+      this.usuarioActivo = navigation.extras.state['usuario'];
+    }
+  }
 
   ngOnInit() {
-    const dniUsuarioLogueado = '74125896';
+    
+    if (!this.usuarioActivo) {
+      this.router.navigate(['/']);
+      return;
+    }
+   
+    const dniUsuarioLogueado = this.usuarioActivo.dni;
 
     this.apiService.obtenerLineasUsuario(dniUsuarioLogueado).subscribe({
       next: (datosDelBackend) => {
         this.lineas = datosDelBackend;
         this.cargandoLineas = false;
         
-        // ¡LA MAGIA! Le decimos a Angular que pinte la pantalla ahora mismo
         this.cdr.detectChanges(); 
       },
       error: (error) => {
@@ -62,7 +74,11 @@ export class DashboardComponent implements OnInit {
         this.lineasSeleccionadasIds.includes(linea.id)
       );
       this.router.navigate(['/security-measures'], { 
-        state: { lineas: lineasAEnviar } 
+    
+        state: { 
+          lineas: lineasAEnviar,
+          usuario: this.usuarioActivo 
+        } 
       });
     }
   }

@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { ApiService } from '../../core/services/api.service';
+import { ChangeDetectorRef } from '@angular/core'; 
 
 @Component({
   selector: 'app-home',
@@ -11,16 +13,20 @@ import { Router } from '@angular/router';
   styleUrl: './home.scss'
 })
 export class HomeComponent {
-  // Variables para el DNI
-  dniNumber: string = '';
   
-  // Controladores de Vista y Estados
+  dniNumber: string = '';    
   currentView: 'dni' | 'facial' = 'dni';
   scanState: 'idle' | 'scanning' | 'success' = 'idle';
 
-  constructor(private router: Router) {}
+ 
+  mostrarModalError: boolean = false;
+  mensajeError: string = '';
+  estaCargando: boolean = false; 
 
-  // Bloquea letras en el input
+ 
+  constructor(private router: Router, private apiService: ApiService, private cdr: ChangeDetectorRef) {}
+
+  
   permitirSoloNumeros(event: KeyboardEvent) {
     const charCode = event.key;
     if (!/^[0-9]$/.test(charCode)) {
@@ -40,27 +46,46 @@ export class HomeComponent {
     return this.dniNumber.length > 0 && this.dniNumber.length < 8;
   }
 
-  // Pasa de la vista DNI a la Facial
+ 
   continuar() {
     if (this.isDniValid) {
-      // Ahora navegamos a la nueva ruta en vez de cambiar la vista
-      this.router.navigate(['/face-verification']);
+      this.estaCargando = true;
+      this.cdr.detectChanges(); 
+      
+      const payload = { dni: this.dniNumber, biometriaExitosa: false };
+
+      this.apiService.validarReniec(payload).subscribe({
+        next: (usuario) => {
+          this.estaCargando = false;
+         
+          this.router.navigate(['/face-verification'], { state: { usuario } });
+        },
+        error: (err) => {
+          console.error("Detalle del error:", err); 
+          this.estaCargando = false;
+          
+        
+          if (err.name === 'HttpErrorResponse' && err.status === 0) {
+            this.mensajeError = 'No se pudo conectar al servidor. Verifica que json-server esté encendido.';
+          } else {
+            this.mensajeError = err.message || 'Usuario no encontrado.';
+          }
+          
+          this.mostrarModalError = true;
+          this.cdr.detectChanges(); 
+        }
+      });
     }
   }
 
-  // Inicia la animación de la cara y redirige al éxito
   iniciarVerificacion() {
     this.scanState = 'scanning';
     
-    // Simula 3 segundos de escaneo
     setTimeout(() => {
       this.scanState = 'success';
-      
-      // Espera 1.5 segundos para que el usuario vea el check verde y viaja al panel
       setTimeout(() => {
         this.router.navigate(['/dashboard']);
       }, 1500);
-
     }, 3000);
   }
 }

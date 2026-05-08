@@ -18,6 +18,7 @@ export interface UsuarioReniec {
 
 export interface LineaMovil {
   id: number;
+  dni: string;
   numero: string;
   operador: string;
   estado: string;
@@ -35,18 +36,17 @@ export interface DatosIncidente {
   referencia: string;
   fecha: string;
   hora: string;
-  correoNotificacion: string;
+  
 }
 
-// BACKEND
 export interface SolicitudBloqueoPayload {
   usuarioDni: string;          
   lineasIds: number[];         
+  correoNotificacion: string;  
   acciones: {
     bloqueoLinea: boolean;     
     reportePolicia: boolean;   
   };
-  
   datosIncidente: DatosIncidente | null; 
 }
 
@@ -56,4 +56,15 @@ export interface TicketRespuesta {
   codigoSolicitud: string;
   fechaProcesamiento: string;
   mensaje: string;
+}
+
+
+export interface Provincia {
+  nombre: string;
+  distritos: string[];
+}
+
+export interface Departamento {
+  nombre: string;
+  provincias: Provincia[];
 }

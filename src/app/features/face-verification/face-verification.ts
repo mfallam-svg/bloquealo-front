@@ -1,59 +1,57 @@
-import { Component, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-
-// Importamos el servicio y el contrato
 import { ApiService } from '../../core/services/api.service';
-import { ValidacionReniecPayload, UsuarioReniec } from '../../core/models/bloqueo.models';
 
 @Component({
   selector: 'app-face-verification',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule], 
   templateUrl: './face-verification.html',
   styleUrl: './face-verification.scss'
 })
-export class FaceVerificationComponent {
-  scanState: 'idle' | 'scanning' | 'success' = 'idle';
+export class FaceVerificationComponent implements OnInit {
+  scanState: 'idle' | 'scanning' | 'success' | 'error' = 'idle';
+   
+  usuarioValidado: any = null; 
 
-  constructor(
-    private router: Router, 
-    private cdr: ChangeDetectorRef, // ¡Agregada la coma que faltaba aquí!
-    private apiService: ApiService
-  ) {}
+  constructor(private router: Router, private apiService: ApiService) {
+
+    const navigation = this.router.getCurrentNavigation();
+    if (navigation?.extras.state && navigation.extras.state['usuario']) {
+      this.usuarioValidado = navigation.extras.state['usuario'];
+    }
+  }
+
+  ngOnInit() {   
+    if (!this.usuarioValidado) {
+      this.router.navigate(['/']);
+    }
+  }
 
   iniciarVerificacion() {
     this.scanState = 'scanning';
-    
-    // 1. ARMAMOS EL PAYLOAD PARA RENIEC
-    // Simulamos que el usuario ingresó este DNI en un input previo
-    const payloadLogin: ValidacionReniecPayload = {
-      dni: '74125896', 
-      biometriaExitosa: true // Asumimos que la cámara captó bien el rostro
-    };
+   
+    setTimeout(() => {
+          
+      const payload = {
+        dni: this.usuarioValidado.dni,
+        biometriaExitosa: true
+      };
 
-    // 2. LLAMAMOS AL SERVICIO SIMULADO (RENIEC)
-    // Esto reemplaza tu primer setTimeout. La animación de carga ahora es controlada por la red.
-    this.apiService.validarReniec(payloadLogin).subscribe({
-      next: (usuarioReniec: UsuarioReniec) => {
-        // Reniec respondió con éxito (después del delay simulado de 1.5s)
-        console.log('✅ Reniec validó al usuario:', usuarioReniec);
-        
-        this.scanState = 'success';
-        this.cdr.detectChanges(); // Forzamos el pintado del escudo y fondo verde/rojo
-
-        // 3. TEMPORIZADOR VISUAL
-        // Esperamos 2.5 segundos admirando el escudo de éxito antes de saltar al Dashboard
-        setTimeout(() => {
-          this.router.navigate(['/dashboard']);
-        }, 2500);
-      },
-      error: (err) => {
-        console.error('❌ Error al validar con Reniec', err);
-        // Si fallara, regresamos al estado inicial
-        this.scanState = 'idle';
-        this.cdr.detectChanges();
-      }
-    });
+      this.apiService.validarReniec(payload).subscribe({
+        next: (res) => {
+          this.scanState = 'success';
+          setTimeout(() => {            
+            this.router.navigate(['/dashboard'], { state: { usuario: this.usuarioValidado } }); 
+          }, 1500);
+        },
+        error: (err) => {
+          console.error('Error al validar biometría:', err);
+          this.scanState = 'error';
+        }
+      });
+      
+    }, 3000);
   }
 }

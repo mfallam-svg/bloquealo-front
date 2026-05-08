@@ -2,7 +2,8 @@ import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { SolicitudBloqueoPayload } from '../../core/models/bloqueo.models';
+import { SolicitudBloqueoPayload, LineaMovil, Departamento, Provincia } from '../../core/models/bloqueo.models';
+import { ApiService } from '../../core/services/api.service';
 
 @Component({
   selector: 'app-security-measures',
@@ -12,10 +13,10 @@ import { SolicitudBloqueoPayload } from '../../core/models/bloqueo.models';
   styleUrl: './security-measures.scss'
 })
 export class SecurityMeasuresComponent implements OnInit {
-  lineasSeleccionadas: any[] = []; 
+  lineasSeleccionadas: LineaMovil[] = []; 
   mostrarLineas = false; 
 
-  bloqueoLinea: boolean = false;
+  bloqueoLinea: boolean = true; 
   reportePolicia: boolean = false;
 
   incidente = {
@@ -23,27 +24,22 @@ export class SecurityMeasuresComponent implements OnInit {
     calle: '', referencia: '', fecha: '', hora: '', correo: ''
   };
 
-  maxDate: string = '';
+  maxDate: string = '';  
   
-  departamentos = ['Amazonas', 'Arequipa', 'Cusco', 'Lima', 'Piura'];
-  provincias = ['Lima', 'Callao', 'Cañete', 'Cusco'];
-  distritos = ['Miraflores', 'San Isidro', 'San Borja', 'Surco', 'Cercado de Lima', 'Cusco'];
+  departamentosPeru: Departamento[] = [];
+  provinciasDisponibles: Provincia[] = [];
+  distritosDisponibles: string[] = [];
 
-  // --- VARIABLES DEL MAPA ---
-  mostrarModalMapa: boolean = false;
-  buscandoUbicacion: boolean = false;
-
-  // --- VARIABLES PARA EL RELOJ ESTÉTICO ---
   mostrarReloj: boolean = false;
-  relojModo: 'horas' | 'minutos' = 'horas';
-  horasReloj = [12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
-  minutosReloj = ['00', '05', '10', '15', '20', '25', '30', '35', '40', '45', '50', '55'];
-  
-  horaTemporal: string = '12';
-  minutoTemporal: string = '00';
+  horaSel: number = 12;
+  minutoSel: number = 0;
+  periodoSel: 'AM' | 'PM' = 'AM';
 
-  // 1. INYECTAMOS EL ChangeDetectorRef EN EL CONSTRUCTOR
-  constructor(private router: Router, private cdr: ChangeDetectorRef) {
+  constructor(
+    private router: Router, 
+    private cdr: ChangeDetectorRef,
+    private apiService: ApiService 
+  ) {
     const navigation = this.router.getCurrentNavigation();
     if (navigation?.extras.state && navigation.extras.state['lineas']) {
       this.lineasSeleccionadas = navigation.extras.state['lineas'];
@@ -55,92 +51,109 @@ export class SecurityMeasuresComponent implements OnInit {
   ngOnInit() {
     const today = new Date();
     this.maxDate = today.toISOString().split('T')[0];
+        
+    this.apiService.obtenerUbigeo().subscribe({
+      next: (data) => {
+        this.departamentosPeru = data;
+        this.cdr.detectChanges(); 
+      },
+      error: (err) => {
+        console.error('Error al cargar los departamentos:', err);
+      }
+    });
   }
 
   get cantidadAcciones(): number {
-    let count = 0;
-    if (this.bloqueoLinea) count++;
+    let count = 1; 
     if (this.reportePolicia) count++;
     return count;
   }
 
-  get mostrarAlertaBloqueo(): boolean {
-    return this.reportePolicia && !this.bloqueoLinea;
-  }
-
   get esFormularioValido(): boolean {
-    if (this.cantidadAcciones === 0) return false;
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    const correoValido = emailRegex.test(this.incidente.correo);
+
+    if (!correoValido) return false;
 
     if (this.reportePolicia) {
-      const formCompleto = 
-        this.incidente.modalidad !== '' && this.incidente.departamento !== '' &&
-        this.incidente.provincia !== '' && this.incidente.distrito !== '' &&
-        this.incidente.calle.trim() !== '' && this.incidente.fecha !== '' &&
-        this.incidente.hora !== '' && this.incidente.correo.includes('@'); 
-      
-      return formCompleto && !this.mostrarAlertaBloqueo;
+      const formCompleto =
+        this.incidente.modalidad !== '' && 
+        this.incidente.departamento !== '' &&
+        this.incidente.provincia !== '' && 
+        this.incidente.distrito !== '' &&
+        this.incidente.calle.trim() !== '' && 
+        this.incidente.fecha !== '' &&
+        this.incidente.hora !== ''; 
+
+      return formCompleto;
     }
-    return this.bloqueoLinea;
+    
+    return true; 
   }
 
   toggleLineas() { this.mostrarLineas = !this.mostrarLineas; }
 
-  // --- FUNCIONES DEL MAPA ---
-  abrirMapa(event: Event) {
-    event.preventDefault(); 
-    this.mostrarModalMapa = true;
-    this.buscandoUbicacion = true;
-
-    // 2. FORZAMOS EL CAMBIO DESPUÉS DE 2 SEGUNDOS EXACTOS
-    setTimeout(() => {
-      this.buscandoUbicacion = false;
-      this.cdr.detectChanges(); // ¡Esta es la magia que despierta a Angular!
-    }, 2000); 
+  
+  onDepartamentoChange() {
+    const dep = this.departamentosPeru.find(d => d.nombre === this.incidente.departamento);
+    this.provinciasDisponibles = dep ? dep.provincias : [];
+    
+    this.distritosDisponibles = [];
+    this.incidente.provincia = '';
+    this.incidente.distrito = '';
   }
 
-  cerrarMapa() {
-    this.mostrarModalMapa = false;
+  onProvinciaChange() {
+    const dep = this.departamentosPeru.find(d => d.nombre === this.incidente.departamento);
+    if (dep) {
+      const prov = dep.provincias.find((p: Provincia) => p.nombre === this.incidente.provincia);
+      this.distritosDisponibles = prov ? prov.distritos : [];
+    }
+    this.incidente.distrito = '';
   }
 
-  confirmarUbicacion() {
-    this.incidente.departamento = 'Lima';
-    this.incidente.provincia = 'Lima';
-    this.incidente.distrito = 'San Borja';
-    this.incidente.calle = 'Av. Javier Prado Este'; 
-    this.cerrarMapa();
-  }
-
-  // --- FUNCIONES DEL RELOJ ---
+  
   abrirReloj() {
     this.mostrarReloj = true;
-    this.relojModo = 'horas';
   }
 
-  seleccionarHoraReloj(h: number) {
-    this.horaTemporal = h < 10 ? `0${h}` : `${h}`;
-    this.relojModo = 'minutos'; 
+  cambiarHora(delta: number) {
+    this.horaSel += delta;
+    if (this.horaSel > 12) this.horaSel = 1;
+    if (this.horaSel < 1) this.horaSel = 12;
   }
 
-  seleccionarMinutoReloj(m: string) {
-    this.minutoTemporal = m;
-    this.incidente.hora = `${this.horaTemporal}:${this.minutoTemporal}`;
-    this.mostrarReloj = false; 
+  cambiarMinuto(delta: number) {
+    this.minutoSel += delta;
+    if (this.minutoSel > 59) this.minutoSel = 0;
+    if (this.minutoSel < 0) this.minutoSel = 59;
   }
 
+  setPeriodo(p: 'AM' | 'PM') {
+    this.periodoSel = p;
+  }
+
+  confirmarHora() {
+    const h = this.horaSel < 10 ? `0${this.horaSel}` : `${this.horaSel}`;
+    const m = this.minutoSel < 10 ? `0${this.minutoSel}` : `${this.minutoSel}`;
+    const p = this.periodoSel === 'AM' ? 'a. m.' : 'p. m.';
+    this.incidente.hora = `${h}:${m} ${p}`;
+    this.mostrarReloj = false;
+  }
+
+  
   ejecutarAcciones() {
     if (this.esFormularioValido) {
-      
-      // 1. ARMAMOS EL PAQUETE (PAYLOAD) EXACTAMENTE COMO LO PIDE EL BACKEND
       const payloadAlBackend: SolicitudBloqueoPayload = {
-        usuarioDni: '74125896', // DNI simulado del usuario logueado
-        lineasIds: this.lineasSeleccionadas.map(linea => linea.id), // Extraemos solo los IDs [1, 2, 3...]
-        
+        usuarioDni: '75906610',
+        lineasIds: this.lineasSeleccionadas.map(linea => linea.id),
+        correoNotificacion: this.incidente.correo,
+
         acciones: {
           bloqueoLinea: this.bloqueoLinea,
           reportePolicia: this.reportePolicia
         },
         
-        // 2. Si hay reporte policial, mapeamos los datos. Si no, enviamos 'null'
         datosIncidente: this.reportePolicia ? {
           modalidad: this.incidente.modalidad,
           departamento: this.incidente.departamento,
@@ -149,17 +162,12 @@ export class SecurityMeasuresComponent implements OnInit {
           calle: this.incidente.calle,
           referencia: this.incidente.referencia,
           fecha: this.incidente.fecha,
-          hora: this.incidente.hora,
-          correoNotificacion: this.incidente.correo
+          hora: this.incidente.hora
         } : null
       };
 
-      // 3. ENVIAMOS EL PAYLOAD A LA PANTALLA DE CARGA
       this.router.navigate(['/blocking-process'], {
-        state: { 
-          payload: payloadAlBackend,
-          cantidad: this.cantidadAcciones
-        }
+        state: { payload: payloadAlBackend, cantidad: this.cantidadAcciones }
       });
     }
   }

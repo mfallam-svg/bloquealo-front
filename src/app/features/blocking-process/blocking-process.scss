@@ -71,8 +71,55 @@ body { margin: 0; font-family: 'Inter', sans-serif; background-color: $bg-color;
 .success-container {
   max-width: 800px; margin: -50px auto 100px; padding: 0 20px;
   
-  .ticket-info { background-color: $white; border: 1px solid $border-color; border-radius: 16px; display: flex; margin-bottom: 40px; box-shadow: 0 4px 6px rgba(0,0,0,0.02); .info-block { flex: 1; padding: 24px; display: flex; flex-direction: column; gap: 8px; &.border-right { border-right: 1px solid $border-color; } .label { font-size: 11px; font-weight: 700; color: $text-secondary; letter-spacing: 0.5px; } .value { font-size: 16px; font-weight: 700; color: $text-primary; } } }
-  
+  .ticket-info { 
+    background-color: $white; 
+    border: 1px solid $border-color; 
+    border-radius: 16px; 
+    display: flex; 
+    margin-bottom: 40px; 
+    box-shadow: 0 4px 6px rgba(0,0,0,0.02); 
+    
+    .info-block { 
+      flex: 1; 
+      padding: 24px; 
+      display: flex; 
+      flex-direction: column; 
+      gap: 8px; 
+      min-width: 0; 
+      position: relative;
+      
+      &.border-right { 
+        border-right: 1px solid $border-color; 
+      } 
+      
+      .label { 
+        font-size: 11px; 
+        font-weight: 700; 
+        color: $text-secondary; 
+        letter-spacing: 0.5px; 
+      } 
+      
+      .value { 
+        font-size: 16px; 
+        font-weight: 700; 
+        color: $text-primary; 
+        
+        
+        display: flex; 
+        align-items: center; 
+        justify-content: space-between; 
+        gap: 16px; 
+        word-break: break-word; 
+        white-space: normal; 
+        line-height: 1.4;
+        
+        
+        svg, img {
+          flex-shrink: 0; 
+        }
+      } 
+    } 
+  }
   .section-title-green { display: flex; align-items: center; gap: 8px; font-size: 16px; font-weight: 700; color: #166534; margin-bottom: 16px; svg { width: 20px; } }
 
   .result-card { background-color: $white; border: 1px solid $border-color; border-radius: 12px; margin-bottom: 16px; overflow: hidden; 
@@ -87,7 +134,7 @@ body { margin: 0; font-family: 'Inter', sans-serif; background-color: $bg-color;
     .btn-red, .btn-white { 
       width: 100%; height: 56px; border-radius: 16px; font-size: 15px; font-weight: 700; 
       display: flex; justify-content: center; align-items: center; gap: 10px; 
-      cursor: pointer; transition: all 0.2s ease; text-decoration: none; /* Para que el <a> no se subraye */
+      cursor: pointer; transition: all 0.2s ease; text-decoration: none; 
       svg { width: 18px; transition: transform 0.2s; } 
     }
     
@@ -123,20 +170,14 @@ body { margin: 0; font-family: 'Inter', sans-serif; background-color: $bg-color;
 @keyframes fadeInUp { to { opacity: 1; transform: translateY(0); } }
 
 
-@media (max-width: 768px) {
-  .ticket-info { flex-direction: column; .info-block.border-right { border-right: none; border-bottom: 1px solid $border-color; } }
-  .rc-header { flex-direction: column; text-align: center; .rc-status-icon { position: absolute; top: 20px; right: 20px; } }
-  .process-container { padding: 30px 20px; margin: -20px 20px 0; }
-}
-
 
 @media (max-width: 850px) {
-  /* Reducimos los bordes laterales para ganar espacio */
+ 
   .header-container {
     padding: 0 16px;
   }
   
-  /* Ajustamos un poco el logo y evitamos que el texto baje de línea */
+ 
   .logo-area {
     gap: 10px;
     .gob-pe-logo { height: 24px; }
@@ -146,10 +187,10 @@ body { margin: 0; font-family: 'Inter', sans-serif; background-color: $bg-color;
   .main-nav {
     gap: 16px;
     
-    /* Magia: Ocultamos todos los links que NO sean el botón de Salir */
+    
     .nav-link:not(.exit-link) { display: none; }
     
-    /* Ocultamos los botones extra y separadores */
+   
     .user-btn { display: none; }
     .vertical-separator { display: none; }
     
@@ -157,10 +198,42 @@ body { margin: 0; font-family: 'Inter', sans-serif; background-color: $bg-color;
   }
 }
 
+@media (max-width: 768px) {
+  
+  .ticket-info {
+    flex-direction: column;
+    
+    .info-block {
+      &.border-right {
+        border-right: none;
+        border-bottom: 1px solid $border-color;
+      }
+      
+      
+      .value {
+        display: flex;
+        align-items: center; 
+        justify-content: space-between; 
+        gap: 16px; 
+        word-break: break-word; 
+        white-space: normal;
+        line-height: 1.4;
+        
+        
+        svg, img {
+          flex-shrink: 0; 
+        }
+      }
+    }
+  }
+
+  .rc-header { flex-direction: column; text-align: center; position: relative; .rc-status-icon { position: absolute; top: 20px; right: 20px; } }
+  .process-container { padding: 30px 20px; margin: -20px 20px 0; }
+}
 
 @media (max-width: 400px) {
   .logo-area {
-    /* Si la pantalla es minúscula, ocultamos el nombre del servicio y dejamos solo el escudo */
+   
     .service-name { display: none; }
     .vertical-separator { display: none; }
   }

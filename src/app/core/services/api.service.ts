@@ -1,73 +1,75 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
-import { delay } from 'rxjs/operators';
+import { HttpClient } from '@angular/common/http'; 
+import { Observable, map, throwError } from 'rxjs';
 import { 
   ValidacionReniecPayload, 
   UsuarioReniec, 
   LineaMovil, 
   SolicitudBloqueoPayload, 
-  TicketRespuesta 
+  TicketRespuesta,
+  Departamento 
 } from '../models/bloqueo.models';
 
 @Injectable({
   providedIn: 'root' 
 })
 export class ApiService {
+  
+  private readonly API_URL = 'http://localhost:3000';
 
-  constructor() { }
+  constructor(private http: HttpClient) { }
 
   
-  // POST /api/auth/validar-reniec
-  
-  validarReniec(payload: ValidacionReniecPayload): Observable<UsuarioReniec> {
-    console.log('[Backend Simulado] Consultando a la base de datos de RENIEC...', payload);
-
-    const mockResponse: UsuarioReniec = {
-      nombres: 'JUAN CARLOS', 
-      apellidoPaterno: 'QUISPE',
-      apellidoMaterno: 'MAMANI',
-      dni: payload.dni,
-      autenticado: payload.biometriaExitosa
-    };
-
-    
-    return of(mockResponse).pipe(delay(1500));
+  obtenerUbigeo(): Observable<Departamento[]> {
+    return this.http.get<Departamento[]>(`${this.API_URL}/ubigeo`);
   }
-
-  
-  
-  
+   
   obtenerLineasUsuario(dni: string): Observable<LineaMovil[]> {
-    console.log(`[Backend Simulado] Buscando líneas registradas para el DNI: ${dni}`);
-
-    const mockResponse: LineaMovil[] = [
-      { id: 1, numero: '966 053 100', operador: 'Claro', estado: 'Activo' },
-      { id: 2, numero: '987 456 321', operador: 'Movistar', estado: 'Activo' },
-      { id: 3, numero: '901 234 567', operador: 'Entel', estado: 'Activo' }
-    ];
-
+    console.log('Solicitando líneas para el DNI:', dni);
     
-    return of(mockResponse).pipe(delay(1000));
+    return this.http.get<LineaMovil[]>(`${this.API_URL}/lineas`).pipe(
+      map(todasLasLineas => {
+       
+        const lineasFiltradas = todasLasLineas.filter(l => l.dni === dni);
+        console.log('Líneas encontradas:', lineasFiltradas);
+        return lineasFiltradas;
+      })
+    );
   }
 
-  
-  // POST /api/solicitudes/bloquear
   
   procesarSolicitudBloqueo(payload: SolicitudBloqueoPayload): Observable<TicketRespuesta> {
-    console.log('[Backend Simulado] Recibiendo Payload final en el servidor:');
-    console.dir(payload, { depth: null }); // Imprime el JSON bonito en la consola
+    return this.http.post<any>(`${this.API_URL}/solicitudes-bloqueo`, payload).pipe(
+      map(res => {
+        
+        const randomNum = Math.floor(1000 + Math.random() * 9999);
+        return {
+          exito: true,
+          codigoSolicitud: `SIBP-2026-${randomNum}`,
+          fechaProcesamiento: new Date().toISOString(),
+          mensaje: 'Medidas de seguridad ejecutadas y guardadas en el servidor.'
+        };
+      })
+    );
+  }
 
+  
+  validarReniec(payload: ValidacionReniecPayload): Observable<UsuarioReniec> {
+    console.log('Buscando DNI en la base de datos simulada:', payload.dni);
     
-    const randomNum = Math.floor(1000 + Math.random() * 9000);
-
-    const mockResponse: TicketRespuesta = {
-      exito: true,
-      codigoSolicitud: `SIBP-2026-${randomNum}`,
-      fechaProcesamiento: new Date().toISOString(), // Hora exacta del servidor
-      mensaje: 'Medidas de seguridad ejecutadas correctamente en la red nacional.'
-    };
-
-    
-    return of(mockResponse).pipe(delay(2500));
+    return this.http.get<UsuarioReniec[]>(`${this.API_URL}/validaciones-reniec`).pipe(
+      map(usuarios => {
+        
+        
+        const usuarioEncontrado = usuarios.find(u => u.dni === payload.dni);
+        
+        if (usuarioEncontrado) {
+          console.log('¡Usuario encontrado!', usuarioEncontrado);
+          return usuarioEncontrado; 
+        } else {
+          throw new Error('El DNI ingresado no se encuentra registrado en el padrón de RENIEC.');
+        }
+      })
+    );
   }
 }
